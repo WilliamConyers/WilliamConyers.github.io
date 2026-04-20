@@ -1,0 +1,73 @@
+/* ─────────────────────────────────────────────
+   calculator.css
+   Styles specific to the Net Worth Calculator tab:
+   result cards, chart wrapper, and footnote.
+───────────────────────────────────────────── */
+
+/* ── Result summary cards ── */
+.results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.result-card {
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: #fff;
+}
+.result-card.roth-card    { background: #4A72B8; }
+.result-card.trad-card    { background: #2A9D8F; }
+.result-card.contrib-card { background: #7B5EA7; }
+
+.result-card .rc-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-bottom: 5px;
+}
+.result-card .rc-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.result-card .rc-sub {
+  font-size: 0.7rem;
+  opacity: 0.62;
+  font-weight: 500;
+}
+.result-card .rc-breakdown {
+  font-size: 0.67rem;
+  opacity: 0.5;
+  font-weight: 500;
+  margin-top: 7px;
+  line-height: 1.5;
+}
+
+/* ── Chart ── */
+.chart-wrap {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  position: relative;
+  height: 340px;
+}
+
+/* ── Footnote below the chart ── */
+.compare-note {
+  font-size: 0.78rem;
+  color: rgba(45,44,41,0.4);
+  margin-top: 14px;
+  line-height: 1.7;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .results { grid-template-columns: 1fr; }
+}

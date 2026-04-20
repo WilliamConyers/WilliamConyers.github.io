@@ -4,377 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>William Conyers</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles: load order matters — base first, then layout, then components -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/tiles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/calculator.css">
+
+  <!-- Chart.js (used by calculator tab) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* Remove number input spinners */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
-    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
-
-    body {
-      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-      background: #EDECEA;
-      color: #2d2c29;
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── Tab bar ── */
-    .tab-bar {
-      background: #fff;
-      border-bottom: 1px solid rgba(0,0,0,0.07);
-      display: flex;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-
-    .tab {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: rgba(45,44,41,0.45);
-      padding: 14px 18px;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: color 0.15s, border-color 0.15s;
-      user-select: none;
-    }
-    .tab:hover { color: #2d2c29; }
-    .tab.active { color: #4A72B8; border-bottom-color: #4A72B8; }
-
-    /* ── Page layout ── */
-    .page { max-width: 960px; margin: 0 auto; padding: 40px 32px 120px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 28px;
-      color: #2d2c29;
-    }
-
-    .divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 20px 0; }
-
-    p { color: rgba(45,44,41,0.75); margin-bottom: 8px; }
-    a { color: #4A72B8; text-decoration: none; border-bottom: 1px solid rgba(74,114,184,0.3); padding-bottom: 1px; }
-    a:hover { border-color: #4A72B8; }
-
-    /* ── Input tiles ── */
-    .input-tiles {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .input-tile {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
-    }
-
-    .tile-header {
-      padding: 11px 16px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: #fff;
-    }
-
-    .tile-blue .tile-header   { background: #4A72B8; }
-    .tile-teal .tile-header   { background: #2A9D8F; }
-    .tile-plum .tile-header   { background: #7B5EA7; }
-
-    .tile-body {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* ── Fields ── */
-    .field { display: flex; flex-direction: column; gap: 4px; }
-
-    .field label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: rgba(45,44,41,0.45);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .field input {
-      font-family: inherit;
-      font-size: 0.95rem;
-      color: #2d2c29;
-      background: #F8F7F5;
-      border: 1.5px solid rgba(0,0,0,0.09);
-      border-radius: 7px;
-      padding: 8px 11px;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      width: 100%;
-    }
-    .field input:focus {
-      border-color: #4A72B8;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(74,114,184,0.1);
-    }
-    .field input.over-cap { border-color: #C98A2A; }
-
-    .cap-warning {
-      font-size: 0.7rem;
-      color: #C98A2A;
-      font-weight: 500;
-      display: none;
-    }
-    .cap-warning.visible { display: block; }
-
-    /* ── Input row with dollar equivalent ── */
-    .input-row { display: flex; align-items: center; gap: 8px; }
-    .input-row input { flex: 1; min-width: 0; }
-    .dollar-equiv {
-      font-size: 0.82rem;
-      color: rgba(45,44,41,0.35);
-      white-space: nowrap;
-      font-weight: 500;
-      min-width: 76px;
-      text-align: right;
-    }
-
-    /* ── Account type toggle ── */
-    .acct-toggle {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .acct-toggle-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: rgba(45,44,41,0.45);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .acct-options {
-      display: flex;
-      background: #F8F7F5;
-      border: 1.5px solid rgba(0,0,0,0.09);
-      border-radius: 7px;
-      overflow: hidden;
-    }
-
-    .acct-opt {
-      flex: 1;
-      text-align: center;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 8px 4px;
-      cursor: pointer;
-      color: rgba(45,44,41,0.45);
-      transition: background 0.15s, color 0.15s;
-      user-select: none;
-    }
-    .acct-opt + .acct-opt { border-left: 1.5px solid rgba(0,0,0,0.09); }
-    .acct-opt.active { background: #4A72B8; color: #fff; }
-
-    /* ── View toggle (compare/roth/trad) ── */
-    .view-toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .view-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: rgba(45,44,41,0.38);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-    }
-
-    .pill-toggle {
-      display: flex;
-      background: rgba(0,0,0,0.06);
-      border-radius: 9px;
-      padding: 3px;
-      gap: 2px;
-    }
-
-    .pill-option {
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 7px;
-      cursor: pointer;
-      color: rgba(45,44,41,0.45);
-      transition: background 0.15s, color 0.15s;
-      user-select: none;
-    }
-    .pill-option.active { background: #4A72B8; color: #fff; box-shadow: 0 1px 4px rgba(74,114,184,0.3); }
-
-    /* ── Info button & tooltip ── */
-    .info-wrap { position: relative; display: inline-flex; align-items: center; }
-
-    .info-btn {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(45,44,41,0.25);
-      background: transparent;
-      color: rgba(45,44,41,0.4);
-      font-size: 0.7rem;
-      font-family: inherit;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.15s, color 0.15s;
-      flex-shrink: 0;
-    }
-    .info-btn:hover { border-color: #4A72B8; color: #4A72B8; }
-
-    .info-tooltip {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 290px;
-      background: #2d2c29;
-      color: rgba(255,255,255,0.82);
-      font-size: 0.77rem;
-      line-height: 1.6;
-      padding: 13px 15px;
-      border-radius: 9px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.22);
-      z-index: 200;
-      pointer-events: none;
-    }
-    .info-tooltip strong { color: #fff; display: block; margin-bottom: 6px; font-size: 0.82rem; }
-    .info-tooltip em { font-style: normal; font-family: monospace; font-size: 0.8rem; color: rgba(255,255,255,0.6); }
-    .info-wrap:hover .info-tooltip { display: block; }
-
-    /* ── Re-run button ── */
-    .rerun-btn {
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 5px 13px;
-      border-radius: 7px;
-      border: 1.5px solid rgba(74,114,184,0.4);
-      background: transparent;
-      color: #4A72B8;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      display: none;
-    }
-    .rerun-btn:hover { background: rgba(74,114,184,0.08); border-color: #4A72B8; }
-    .rerun-btn.visible { display: block; }
-
-    /* ── Result tiles ── */
-    .results {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .result-card {
-      border-radius: 12px;
-      padding: 16px 18px;
-      color: #fff;
-      position: relative;
-    }
-
-    .result-card.roth-card    { background: #4A72B8; }
-    .result-card.trad-card    { background: #2A9D8F; }
-    .result-card.contrib-card { background: #7B5EA7; }
-
-    .result-card .label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.7;
-      margin-bottom: 5px;
-    }
-
-    .result-card .value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 5px;
-    }
-
-    .result-card .sub {
-      font-size: 0.7rem;
-      opacity: 0.62;
-      font-weight: 500;
-    }
-
-    .result-card.highlight::after {
-      content: '★ Best';
-      position: absolute;
-      top: 12px;
-      right: 14px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      opacity: 0.7;
-    }
-
-    /* ── Chart ── */
-    .chart-wrap {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px 20px 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      position: relative;
-      height: 340px;
-    }
-
-    .compare-note {
-      font-size: 0.78rem;
-      color: rgba(45,44,41,0.4);
-      margin-top: 14px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 700px) {
-      .tab-bar { padding: 0 16px; }
-      .page { padding: 28px 16px 100px; }
-      h1 { font-size: 1.6rem; }
-      .input-tiles { grid-template-columns: 1fr; }
-      .results { grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
 <body>
 
+  <!-- ── Tab bar ─────────────────────────────
+       Each tab needs data-tab="<id>" matching
+       a <div id="tab-<id>"> below.
+  ──────────────────────────────────────────── -->
   <nav class="tab-bar">
     <div class="tab active" data-tab="home">Home</div>
-    <div class="tab" data-tab="calculator">401k Calculator</div>
+    <div class="tab" data-tab="calculator">Net Worth Calculator</div>
   </nav>
 
   <div class="page">
 
-    <!-- Home -->
+    <!-- ── Home ────────────────────────────── -->
     <div class="tab-content active" id="tab-home">
       <h1>William Conyers</h1>
       <hr class="divider">
@@ -382,92 +41,94 @@
       <p>I am currently testing building a website using Claude Code and will be building out functionality over time.</p>
     </div>
 
-    <!-- 401k Calculator -->
+    <!-- ── Net Worth Calculator ─────────────
+         Inputs: account tiles (401k, IRA) + profile tile
+         Outputs: result cards + chart
+         JS: js/calculator/calculator.js
+    ──────────────────────────────────────────── -->
     <div class="tab-content" id="tab-calculator">
-      <h1>401k Calculator</h1>
+      <h1>Net Worth Calculator</h1>
       <hr class="divider">
 
-      <!-- Input tiles -->
-      <div class="input-tiles">
+      <!-- Account tiles (2-col grid) -->
+      <div class="account-row">
 
-        <!-- Tile 1: Contributions -->
+        <!-- 401k -->
         <div class="input-tile tile-blue">
-          <div class="tile-header">Contributions</div>
+          <div class="tile-header"><span>401k</span></div>
           <div class="tile-body">
-            <div class="field">
-              <label>Annual Salary ($)</label>
-              <input type="number" id="salary" value="100000" min="0" step="1000">
+
+            <div class="type-pill-wrap">
+              <div class="type-pill-label">Account Type</div>
+              <div class="type-pill" data-account="k401">
+                <div class="type-opt active" data-type="roth">Roth</div>
+                <div class="type-opt" data-type="traditional">Traditional</div>
+              </div>
             </div>
+
+            <hr class="field-hr">
+
             <div class="field">
               <label>Your Contribution (% of salary)</label>
               <div class="input-row">
                 <input type="number" id="self-pct" value="12" min="0" max="100" step="0.5">
                 <span class="dollar-equiv" id="self-dollar">$12,000/yr</span>
               </div>
-              <span class="cap-warning" id="cap-warning">Exceeds 2026 IRS limit of $23,500/yr — capped</span>
+              <span class="cap-warning" id="k401-cap-warning">Exceeds 2026 limit of $23,500/yr — capped</span>
             </div>
+
             <div class="field">
-              <label>Employer Contribution (% of salary)</label>
+              <label>Employer Match (% of salary)</label>
               <div class="input-row">
                 <input type="number" id="employer-pct" value="3" min="0" max="100" step="0.5">
                 <span class="dollar-equiv" id="employer-dollar">$3,000/yr</span>
               </div>
             </div>
-            <div class="acct-toggle">
-              <div class="acct-toggle-label">Contribution Type</div>
-              <div class="acct-options">
-                <div class="acct-opt active" data-acct="post-tax">Post-tax (Roth)</div>
-                <div class="acct-opt" data-acct="pre-tax">Pre-tax (Traditional)</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Tile 2: Growth & Taxes -->
-        <div class="input-tile tile-teal">
-          <div class="tile-header">Growth &amp; Taxes</div>
-          <div class="tile-body">
-            <div class="field">
-              <label>Annual Return Rate (%)</label>
-              <input type="number" id="growth-rate" value="7" min="0" max="30" step="0.5">
-            </div>
-            <div class="field">
-              <label>Salary Growth Rate (%/yr)</label>
-              <input type="number" id="salary-growth" value="3" min="0" max="20" step="0.5">
-            </div>
-            <div class="field">
-              <label>Current Tax Bracket (%)</label>
-              <input type="number" id="tax-now" value="24" min="0" max="60" step="1">
-            </div>
-            <div class="field">
-              <label>Retirement Tax Bracket (%)</label>
-              <input type="number" id="tax-retirement" value="20" min="0" max="60" step="1">
-            </div>
-          </div>
-        </div>
+            <hr class="field-hr">
 
-        <!-- Tile 3: Current Info -->
-        <div class="input-tile tile-plum">
-          <div class="tile-header">Current Info</div>
-          <div class="tile-body">
             <div class="field">
               <label>Current 401k Balance ($)</label>
-              <input type="number" id="current-balance" value="25000" min="0" step="1000">
+              <input type="number" id="k401-balance" value="25000" min="0" step="1000">
             </div>
-            <div class="field">
-              <label>Current Age</label>
-              <input type="number" id="current-age" value="30" min="18" max="80" step="1">
-            </div>
-            <div class="field">
-              <label>Retirement Age</label>
-              <input type="number" id="retirement-age" value="65" min="40" max="90" step="1">
-            </div>
+
           </div>
         </div>
 
-      </div>
+        <!-- IRA -->
+        <div class="input-tile tile-plum">
+          <div class="tile-header"><span>IRA</span></div>
+          <div class="tile-body">
 
-      <!-- Chart view toggle -->
+            <div class="type-pill-wrap">
+              <div class="type-pill-label">Account Type</div>
+              <div class="type-pill" data-account="ira">
+                <div class="type-opt active" data-type="roth">Roth</div>
+                <div class="type-opt" data-type="traditional">Traditional</div>
+              </div>
+            </div>
+
+            <hr class="field-hr">
+
+            <div class="field">
+              <label>Annual Contribution ($)</label>
+              <input type="number" id="ira-contrib" value="7000" min="0" step="500">
+              <span class="cap-warning" id="ira-cap-warning">Exceeds 2026 limit of $7,000/yr — capped</span>
+            </div>
+
+            <hr class="field-hr">
+
+            <div class="field">
+              <label>Current IRA Balance ($)</label>
+              <input type="number" id="ira-balance" value="5000" min="0" step="1000">
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /account-row -->
+
+      <!-- Chart mode toggle -->
       <div class="view-toggle-row">
         <span class="view-label">Projection</span>
         <div class="pill-toggle">
@@ -478,32 +139,37 @@
           <button class="info-btn">i</button>
           <div class="info-tooltip">
             <strong>Market Simulation Model</strong>
-            Simulates daily stock price movements using Geometric Brownian Motion (GBM) — the industry-standard model for asset prices.<br><br>
-            Each trading day, the portfolio changes by:<br>
-            <em>exp((μ − σ²/2)·dt + σ·√dt·Z)</em><br><br>
-            where μ is your return rate, σ = 16% (approx. historical S&amp;P 500 volatility), dt = 1/252 trading year, and Z is a random draw from a standard normal distribution.<br><br>
-            The expected long-run outcome matches steady growth, but individual paths swing — as in real markets. Each re-run produces a different path.
+            Simulates annual portfolio movements using Geometric Brownian Motion (GBM) —
+            the industry-standard model for asset prices.<br><br>
+            Each year the portfolio changes by:<br>
+            <em>exp((μ − σ²/2) + σ·Z)</em><br><br>
+            where μ is your return rate, σ = 16% (historical S&amp;P 500 volatility), and Z
+            is a random standard normal draw. Expected long-run outcome matches steady growth,
+            but paths swing — as in real markets.
           </div>
         </div>
         <button class="rerun-btn" id="rerun-btn">↺ Re-run</button>
       </div>
 
-      <!-- Result tiles -->
+      <!-- Result summary cards -->
       <div class="results">
         <div class="result-card roth-card">
-          <div class="label">Roth (after-tax)</div>
-          <div class="value" id="res-roth">—</div>
-          <div class="sub">Tax-free at withdrawal</div>
+          <div class="rc-label">Roth — Tax-Free Value</div>
+          <div class="rc-value" id="res-roth">—</div>
+          <div class="rc-sub" id="res-roth-sub">Tax-free at withdrawal</div>
+          <div class="rc-breakdown" id="res-roth-breakdown"></div>
         </div>
         <div class="result-card trad-card">
-          <div class="label">Traditional (after-tax)</div>
-          <div class="value" id="res-trad">—</div>
-          <div class="sub" id="res-trad-sub">Taxed at withdrawal</div>
+          <div class="rc-label">Traditional — After-Tax</div>
+          <div class="rc-value" id="res-trad">—</div>
+          <div class="rc-sub" id="res-trad-sub">Taxed at withdrawal</div>
+          <div class="rc-breakdown" id="res-trad-breakdown"></div>
         </div>
         <div class="result-card contrib-card">
-          <div class="label">Total Contributed</div>
-          <div class="value" id="res-contributed">—</div>
-          <div class="sub">You + employer</div>
+          <div class="rc-label">Total Contributed</div>
+          <div class="rc-value" id="res-contributed">—</div>
+          <div class="rc-sub">You + employer (all accounts)</div>
+          <div class="rc-breakdown" id="res-contrib-breakdown"></div>
         </div>
       </div>
 
@@ -512,290 +178,62 @@
         <canvas id="growthChart"></canvas>
       </div>
 
+      <!-- Profile tile (at bottom — these are slow-changing assumptions) -->
+      <div class="input-tile tile-amber profile-row" style="margin-top: 14px">
+        <div class="tile-header">Your Profile</div>
+        <div class="tile-body-grid">
+          <div class="field">
+            <label>Annual Salary ($)</label>
+            <input type="number" id="salary" value="100000" min="0" step="1000">
+          </div>
+          <div class="field">
+            <label>Years to Retirement</label>
+            <input type="number" id="years" value="35" min="1" max="50" step="1">
+          </div>
+          <div class="field">
+            <label>Expected Return (%/yr)</label>
+            <input type="number" id="growth-rate" value="7" min="0" max="30" step="0.5">
+          </div>
+          <div class="field">
+            <label>Salary Growth (%/yr)</label>
+            <input type="number" id="salary-growth" value="3" min="0" max="20" step="0.5">
+          </div>
+          <div class="field">
+            <label>Current Tax Rate (%)</label>
+            <input type="number" id="tax-now" value="24" min="0" max="60" step="1">
+          </div>
+          <div class="field">
+            <label>Retirement Tax Rate (%)</label>
+            <input type="number" id="tax-retirement" value="20" min="0" max="60" step="1">
+          </div>
+        </div>
+      </div>
+
       <p class="compare-note">
-        Both account types grow identically. Roth contributions are post-tax — withdrawals are tax-free.
-        Traditional contributions are pre-tax — withdrawals are taxed at your retirement bracket.
-        Employee contributions capped at $23,500/yr per 2026 IRS limits.
+        Both Roth and Traditional accounts grow identically — the difference is when you pay tax.
+        Roth: contribute after-tax dollars, withdraw tax-free.
+        Traditional: defer taxes now, pay at your retirement bracket.
+        Choose whichever rate you expect to be lower.<br>
+        2026 IRS limits: 401k employee contributions $23,500/yr · IRA $7,000/yr.
+        Roth IRA income phaseout begins at $150k (single) / $236k (MFJ).
+        Traditional IRA deductibility limits may apply.
       </p>
-    </div>
 
-  </div>
+    </div><!-- /tab-calculator -->
 
-  <script>
-    const CURRENT_YEAR = new Date().getFullYear();
-    const IRS_CAP = 23500;
+  </div><!-- /page -->
 
-    // ── Tabs ──
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-      });
-    });
+  <!-- ── Scripts ──────────────────────────────
+       Load order:
+         1. tabs.js         — no dependencies
+         2. math.js         — no dependencies
+         3. chart.js        — needs math.js (fmt, CURRENT_YEAR)
+         4. calculator.js   — needs math.js + chart.js
+  ──────────────────────────────────────────── -->
+  <script src="js/tabs.js"></script>
+  <script src="js/calculator/math.js"></script>
+  <script src="js/calculator/chart.js"></script>
+  <script src="js/calculator/calculator.js"></script>
 
-    // ── Account type toggle ──
-    let acctMode = 'roth';
-    document.querySelectorAll('.acct-opt').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.acct-opt').forEach(o => o.classList.remove('active'));
-        opt.classList.add('active');
-        acctMode = opt.dataset.acct;
-        calculate();
-      });
-    });
-
-    // ── Projection toggle ──
-    let chartMode = 'steady';
-    document.querySelectorAll('.pill-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.pill-option').forEach(o => o.classList.remove('active'));
-        opt.classList.add('active');
-        chartMode = opt.dataset.mode;
-        document.getElementById('rerun-btn').classList.toggle('visible', chartMode === 'simulate');
-        calculate();
-      });
-    });
-
-    document.getElementById('rerun-btn').addEventListener('click', calculate);
-
-    // ── Chart init ──
-    const ctx = document.getElementById('growthChart').getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels: [], datasets: [] },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: { font: { family: 'Inter', size: 12 }, color: 'rgba(45,44,41,0.55)', boxWidth: 16, padding: 16 }
-          },
-          tooltip: {
-            backgroundColor: '#fff',
-            borderColor: 'rgba(0,0,0,0.1)',
-            borderWidth: 1,
-            titleColor: '#2d2c29',
-            bodyColor: 'rgba(45,44,41,0.65)',
-            titleFont: { family: 'Inter', weight: '600' },
-            bodyFont: { family: 'Inter' },
-            padding: 12,
-            callbacks: { label: c => '  ' + c.dataset.label + ': ' + fmt(c.parsed.y) }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(0,0,0,0.04)' },
-            ticks: { font: { family: 'Inter', size: 11 }, color: 'rgba(45,44,41,0.4)', maxTicksLimit: 10 },
-            border: { color: 'rgba(0,0,0,0.08)' }
-          },
-          y: {
-            grid: { color: 'rgba(0,0,0,0.04)' },
-            ticks: {
-              font: { family: 'Inter', size: 11 },
-              color: 'rgba(45,44,41,0.4)',
-              callback: v => '$' + (v >= 1e6 ? (v/1e6).toFixed(1)+'M' : (v/1e3).toFixed(0)+'k')
-            },
-            border: { color: 'rgba(0,0,0,0.08)' }
-          }
-        }
-      }
-    });
-
-    function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-
-    // ── Box-Muller random normal ──
-    function randn() {
-      let u, v;
-      do { u = Math.random(); } while (u === 0);
-      do { v = Math.random(); } while (v === 0);
-      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-    }
-
-    // ── Geometric Brownian Motion simulation (monthly steps) ──
-    function runGBM({ startBalance, selfPct, employerPct, annualRate, salaryGrowth, salary0, years, taxRetirement }) {
-      const SIGMA  = 0.16;
-      const drift  = (annualRate - 0.5 * SIGMA * SIGMA) / 12;
-      const vol    = SIGMA / Math.sqrt(12);
-
-      let balance = startBalance;
-      let salary  = salary0;
-      const balData  = [Math.round(balance)];
-      const tradData = [Math.round(balance * (1 - taxRetirement))];
-
-      for (let y = 0; y < years; y++) {
-        const annualContrib  = Math.min(salary * selfPct, IRS_CAP);
-        const monthlyContrib = annualContrib / 12;
-        const annualGrant    = salary * employerPct;
-
-        for (let m = 0; m < 12; m++) {
-          balance *= Math.exp(drift + vol * randn());
-          balance += monthlyContrib;
-          // employer grant drops in at end of year (month 11)
-          if (m === 11) balance += annualGrant;
-          balData.push(Math.round(balance));
-          tradData.push(Math.round(balance * (1 - taxRetirement)));
-        }
-        salary *= (1 + salaryGrowth);
-      }
-      return { balanceData: balData, tradAfterTaxData: tradData };
-    }
-
-    function fmtShort(n) {
-      return '$' + Math.round(n).toLocaleString() + '/yr';
-    }
-
-    function calculate() {
-      const salary0       = parseFloat(document.getElementById('salary').value) || 0;
-      const selfPct       = parseFloat(document.getElementById('self-pct').value) / 100 || 0;
-      const employerPct   = parseFloat(document.getElementById('employer-pct').value) / 100 || 0;
-      const annualRate    = parseFloat(document.getElementById('growth-rate').value) / 100 || 0;
-      const salaryGrowth  = parseFloat(document.getElementById('salary-growth').value) / 100 || 0;
-      const taxNow        = parseFloat(document.getElementById('tax-now').value) / 100 || 0;
-      const taxRetirement = parseFloat(document.getElementById('tax-retirement').value) / 100 || 0;
-      const startBalance  = parseFloat(document.getElementById('current-balance').value) || 0;
-      const currentAge    = parseInt(document.getElementById('current-age').value) || 30;
-      const retirementAge = parseInt(document.getElementById('retirement-age').value) || 65;
-
-      const years = Math.max(0, retirementAge - currentAge);
-      const monthlyRate = annualRate / 12;
-
-      const annualContribRaw = salary0 * selfPct;
-      const annualEmployer   = salary0 * employerPct;
-
-      // Dollar equiv labels
-      document.getElementById('self-dollar').textContent     = fmtShort(annualContribRaw);
-      document.getElementById('employer-dollar').textContent = fmtShort(annualEmployer);
-
-      // IRS cap
-      const overCap = annualContribRaw > IRS_CAP;
-      document.getElementById('self-pct').classList.toggle('over-cap', overCap);
-      document.getElementById('cap-warning').classList.toggle('visible', overCap);
-      const annualContrib  = Math.min(annualContribRaw, IRS_CAP);
-      const monthlyContrib = annualContrib / 12;
-
-      // Build monthly labels: show year at January, blank otherwise
-      const totalMonths = years * 12;
-      const labels = [];
-      for (let i = 0; i <= totalMonths; i++) {
-        const monthInYear = (i) % 12;
-        labels.push(monthInYear === 0 ? String(CURRENT_YEAR + Math.floor(i / 12)) : '');
-      }
-
-      const balanceData      = [];
-      const tradAfterTaxData = [];
-      const contribData      = [];
-
-      let balance    = startBalance;
-      let contributed = startBalance;
-      let salary     = salary0;
-
-      // Record starting point
-      balanceData.push(Math.round(balance));
-      tradAfterTaxData.push(Math.round(balance * (1 - taxRetirement)));
-      contribData.push(Math.round(contributed));
-
-      for (let y = 0; y < years; y++) {
-        const annualGrant = salary * employerPct;
-        for (let m = 0; m < 12; m++) {
-          balance = balance * (1 + monthlyRate) + monthlyContrib;
-          contributed += monthlyContrib;
-          if (m === 11) {
-            balance    += annualGrant;
-            contributed += annualGrant;
-          }
-          balanceData.push(Math.round(balance));
-          tradAfterTaxData.push(Math.round(balance * (1 - taxRetirement)));
-          contribData.push(Math.round(contributed));
-        }
-        salary *= (1 + salaryGrowth);
-      }
-
-      // ── Simulation (GBM) ──
-      let simData = null;
-      if (chartMode === 'simulate') {
-        simData = runGBM({ startBalance, selfPct, employerPct, annualRate, salaryGrowth, salary0, years, taxRetirement });
-      }
-
-      // Build chart datasets
-      const datasets = [];
-      const displayBalance = simData ? simData.balanceData : balanceData;
-      const displayTrad    = simData ? simData.tradAfterTaxData : tradAfterTaxData;
-
-      datasets.push({
-        label: chartMode === 'simulate' ? 'Simulated balance (Roth)' : 'Projected balance (Roth)',
-        data: displayBalance,
-        borderColor: '#4A72B8',
-        backgroundColor: 'rgba(74,114,184,0.08)',
-        borderWidth: 2,
-        pointRadius: 0, pointHoverRadius: 4,
-        fill: true,
-        tension: 0,
-      });
-
-      datasets.push({
-        label: chartMode === 'simulate' ? 'Simulated balance (Traditional after-tax)' : 'Projected balance (Traditional after-tax)',
-        data: displayTrad,
-        borderColor: '#2A9D8F',
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        pointRadius: 0, pointHoverRadius: 4,
-        fill: false,
-        tension: 0,
-      });
-
-      if (chartMode === 'simulate') {
-        datasets.push({
-          label: 'Steady growth (reference)',
-          data: balanceData,
-          borderColor: 'rgba(45,44,41,0.18)',
-          backgroundColor: 'transparent',
-          borderWidth: 1.5,
-          borderDash: [6, 4],
-          pointRadius: 0, pointHoverRadius: 0,
-          fill: false,
-          tension: 0.4,
-        });
-      }
-
-      datasets.push({
-        label: 'Amount contributed',
-        data: contribData,
-        borderColor: 'rgba(45,44,41,0.2)',
-        backgroundColor: 'transparent',
-        borderWidth: 1.5,
-        borderDash: [5, 4],
-        pointRadius: 0, pointHoverRadius: 4,
-        fill: false,
-        tension: 0.4,
-      });
-
-      chart.data.labels = labels;
-      chart.data.datasets = datasets;
-      chart.update();
-
-      // Summary cards (last data point = retirement month)
-      const finalRoth    = displayBalance[displayBalance.length - 1];
-      const finalTrad    = displayTrad[displayTrad.length - 1];
-      const totalContrib = contribData[contribData.length - 1];
-
-      document.getElementById('res-roth').textContent = fmt(finalRoth);
-      document.getElementById('res-trad').textContent = fmt(finalTrad);
-      document.getElementById('res-trad-sub').textContent = `Taxed at ${Math.round(taxRetirement * 100)}% at withdrawal`;
-      document.getElementById('res-contributed').textContent = fmt(totalContrib);
-
-      document.getElementById('res-roth').closest('.result-card').classList.toggle('highlight', finalRoth >= finalTrad);
-      document.getElementById('res-trad').closest('.result-card').classList.toggle('highlight', finalTrad > finalRoth);
-    }
-
-    document.querySelectorAll('#tab-calculator input').forEach(el => {
-      el.addEventListener('input', calculate);
-    });
-
-    calculate();
-  </script>
 </body>
 </html>

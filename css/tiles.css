@@ -1,0 +1,126 @@
+/* ─────────────────────────────────────────────
+   tiles.css
+   Input tile shells, color variants, body layouts,
+   form fields, and input rows.
+
+   To add a new tile color: add a .tile-{name} rule
+   under "Color variants" and a matching .type-opt.active
+   rule under "Account type pill" in components.css.
+───────────────────────────────────────────── */
+
+/* ── Tile shell ── */
+.input-tile {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+}
+
+.tile-header {
+  padding: 11px 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Color variants ── */
+.tile-blue  .tile-header { background: #4A72B8; }
+.tile-teal  .tile-header { background: #2A9D8F; }
+.tile-plum  .tile-header { background: #7B5EA7; }
+.tile-amber .tile-header { background: #B8764A; }
+
+/* ── Tile body layouts ── */
+.tile-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Grid body — used for the profile tile (3-col by default) */
+.tile-body-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 18px;
+}
+
+/* ── Page-level tile arrangement ── */
+.profile-row { margin-bottom: 14px; }
+
+.account-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ── Form fields ── */
+.field { display: flex; flex-direction: column; gap: 4px; }
+
+.field label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(45,44,41,0.45);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.field input {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #2d2c29;
+  background: #F8F7F5;
+  border: 1.5px solid rgba(0,0,0,0.09);
+  border-radius: 7px;
+  padding: 8px 11px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.field input:focus {
+  border-color: #4A72B8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(74,114,184,0.1);
+}
+
+/* Amber highlight when value exceeds an IRS cap */
+.field input.over-cap { border-color: #C98A2A; }
+
+.cap-warning {
+  font-size: 0.7rem;
+  color: #C98A2A;
+  font-weight: 500;
+  display: none;
+}
+.cap-warning.visible { display: block; }
+
+/* ── Input + live dollar-equivalent row ── */
+.input-row { display: flex; align-items: center; gap: 8px; }
+.input-row input { flex: 1; min-width: 0; }
+
+.dollar-equiv {
+  font-size: 0.82rem;
+  color: rgba(45,44,41,0.35);
+  white-space: nowrap;
+  font-weight: 500;
+  min-width: 76px;
+  text-align: right;
+}
+
+/* Thin section divider inside a tile body */
+.field-hr { border: none; border-top: 1px solid rgba(0,0,0,0.07); margin: 2px 0; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .tile-body-grid { grid-template-columns: 1fr 1fr; }
+  .account-row    { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .tile-body-grid { grid-template-columns: 1fr; }
+}

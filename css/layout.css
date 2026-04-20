@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────────────
+   layout.css
+   Tab bar, page container, headings, and
+   responsive breakpoints for structural elements.
+   Add new top-level page sections here.
+───────────────────────────────────────────── */
+
+/* ── Tab bar ── */
+.tab-bar {
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  display: flex;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.tab {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(45,44,41,0.45);
+  padding: 14px 18px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.tab:hover  { color: #2d2c29; }
+.tab.active { color: #4A72B8; border-bottom-color: #4A72B8; }
+
+/* ── Page container ── */
+.page { max-width: 960px; margin: 0 auto; padding: 40px 32px 120px; }
+
+/* Tab content panels — JS toggles .active */
+.tab-content        { display: none; }
+.tab-content.active { display: block; }
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 28px;
+  color: #2d2c29;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .tab-bar { padding: 0 16px; }
+  .page    { padding: 28px 16px 100px; }
+  h1       { font-size: 1.6rem; }
+}
