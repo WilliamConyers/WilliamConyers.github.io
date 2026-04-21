@@ -8,8 +8,10 @@
 ───────────────────────────────────────────── */
 
 const CURRENT_YEAR = new Date().getFullYear();
-const IRS_401K_CAP = 23500;   // 2026 employee contribution limit
-const IRS_IRA_CAP  = 7000;    // 2026 IRA contribution limit
+const IRS_401K_CAP    = 23500;  // 2026 employee elective deferral limit
+const IRS_415_CAP     = 70000;  // 2026 total additions limit (employee + employer)
+const IRS_IRA_CAP     = 7000;   // 2026 IRA contribution limit
+const IRS_CAP_INFLATION = 0.025; // assumed annual cap growth rate (IRS adjusts in $500 steps with CPI)
 
 /* ── Formatting helpers ── */
 function fmt(n)   { return '$' + Math.round(n).toLocaleString(); }
@@ -23,13 +25,12 @@ function randn() {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-/* ── Steady compound growth (annual data points) ──
-   annualContribFn(yearIndex) → contribution amount for that year,
-   allowing salary-linked contributions that grow over time.
-   Returns:
-     bals    — balance at the start of each year (index 0 = today)
-     contribs — cumulative amount contributed at each year */
-function projectSteady(startBal, annualContribFn, annualRate, years) {
+/* ── Steady compound growth ──
+   annualContribFn(yearIndex) → contribution amount for that year.
+   monthly=false → one data point per year (index 0 = today, length = years+1)
+   monthly=true  → one data point per month (length = years*12+1)
+   Returns: { bals, contribs } */
+function projectSteady(startBal, annualContribFn, annualRate, years, monthly = false) {
   const mRate = annualRate / 12;
   let bal = startBal, contrib = startBal;
   const bals    = [Math.round(bal)];
@@ -37,38 +38,48 @@ function projectSteady(startBal, annualContribFn, annualRate, years) {
 
   for (let y = 0; y < years; y++) {
     const c = annualContribFn(y);
-    const monthly = c / 12;
-    for (let m = 0; m < 12; m++) bal = bal * (1 + mRate) + monthly;
-    contrib += c;
-    bals.push(Math.round(bal));
-    contribs.push(Math.round(contrib));
+    const monthlyAmt = c / 12;
+    for (let m = 0; m < 12; m++) {
+      bal = bal * (1 + mRate) + monthlyAmt;
+      contrib += monthlyAmt;
+      if (monthly) {
+        bals.push(Math.round(bal));
+        contribs.push(Math.round(contrib));
+      }
+    }
+    if (!monthly) {
+      bals.push(Math.round(bal));
+      contribs.push(Math.round(contrib));
+    }
   }
   return { bals, contribs };
 }
 
-/* ── Geometric Brownian Motion simulation (annual data points) ──
-   Uses 252 daily steps per year (trading days) to simulate
-   realistic market volatility (σ = 16%, historical S&P 500).
-   Expected long-run value matches projectSteady; individual
-   paths will differ. Returns only bals (no contrib tracking
-   needed — use the steady contribs for the contributed line). */
-function projectGBM(startBal, annualContribFn, annualRate, years) {
-  const SIGMA = 0.16;          // annualised volatility
-  const STEPS = 252;           // trading days per year
-  const dt    = 1 / STEPS;
+/* ── Generate shared monthly market returns ──
+   Call once per simulation run; pass the result to every projectGBM call
+   so all accounts experience identical market conditions each month. */
+function generateMonthlyReturns(annualRate, years) {
+  const SIGMA = 0.16;
+  const dt    = 1 / 12;
   const drift = (annualRate - 0.5 * SIGMA * SIGMA) * dt;
   const vol   = SIGMA * Math.sqrt(dt);
+  return Array.from({ length: years * 12 }, () => Math.exp(drift + vol * randn()));
+}
 
+/* ── Apply pre-generated returns to one account ──
+   All accounts sharing the same returns array move with the same market. */
+function projectGBM(startBal, annualContribFn, returns) {
+  const years = returns.length / 12;
   let bal = startBal;
   const bals = [Math.round(bal)];
 
   for (let y = 0; y < years; y++) {
-    const daily = annualContribFn(y) / STEPS;
-    for (let d = 0; d < STEPS; d++) {
-      bal *= Math.exp(drift + vol * randn());
-      bal += daily;
+    const monthlyContrib = annualContribFn(y) / 12;
+    for (let m = 0; m < 12; m++) {
+      bal *= returns[y * 12 + m];
+      bal += monthlyContrib;
+      bals.push(Math.round(bal));
     }
-    bals.push(Math.round(bal));
   }
   return { bals };
 }

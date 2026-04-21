@@ -7,9 +7,10 @@
 /* ── Result summary cards ── */
 .results {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-bottom: 14px;
+  width: 100%;
 }
 
 .result-card {
@@ -17,9 +18,8 @@
   padding: 16px 18px;
   color: #fff;
 }
-.result-card.roth-card    { background: #4A72B8; }
-.result-card.trad-card    { background: #2A9D8F; }
-.result-card.contrib-card { background: #7B5EA7; }
+.result-card.portfolio-card { background: #4A72B8; }
+.result-card.contrib-card   { background: #2A9D8F; }
 
 .result-card .rc-label {
   font-size: 0.68rem;
@@ -68,6 +68,6 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 700px) {
+@media (max-width: 500px) {
   .results { grid-template-columns: 1fr; }
 }

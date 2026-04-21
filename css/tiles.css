@@ -26,6 +26,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tile-collapse-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.input-tile.collapsed .tile-collapse-icon { transform: rotate(-90deg); }
+
+.tile-body,
+.tile-body-grid {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.25s ease, padding 0.25s ease;
+}
+.input-tile.collapsed .tile-body,
+.input-tile.collapsed .tile-body-grid {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* ── Color variants ── */
@@ -115,6 +137,15 @@
 
 /* Thin section divider inside a tile body */
 .field-hr { border: none; border-top: 1px solid rgba(0,0,0,0.07); margin: 2px 0; }
+
+/* Balance section pins to the bottom of the tile so both tiles align across the grid */
+.balance-section {
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+.balance-section .field { flex: 1; min-width: 0; }
 
 /* ── Responsive ── */
 @media (max-width: 700px) {

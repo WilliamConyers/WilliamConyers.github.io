@@ -63,22 +63,14 @@ const growthChart = new Chart(
 
 /* ── Dataset builder ──
    Constructs the Chart.js datasets array from projection data.
-   Kept separate from calculate() so the chart logic can evolve
-   independently of the business logic in calculator.js.
 
    Params:
-     displayAfterTax    — primary series (user's configured setup)
-     altAfterTax        — comparison series (opposite Roth/Trad)
-     showAltSeries      — whether to render the comparison line
-     altLabel           — legend label for the comparison line
-     steadyAfterTax     — steady-growth reference line (simulation mode only)
-     combinedContrib    — cumulative contributions (always steady)
-     chartMode          — 'steady' | 'simulate'                        */
+     displayAfterTax  — primary series reflecting the user's chosen Roth/Traditional mix
+     steadyAfterTax   — steady-growth reference line (simulation mode only)
+     combinedContrib  — cumulative contributions (always steady)
+     chartMode        — 'steady' | 'simulate'                        */
 function buildDatasets({
   displayAfterTax,
-  altAfterTax,
-  showAltSeries,
-  altLabel,
   steadyAfterTax,
   combinedContrib,
   chartMode,
@@ -88,8 +80,8 @@ function buildDatasets({
   // Primary: user's configured setup
   datasets.push({
     label: chartMode === 'simulate'
-      ? 'Your setup — simulated (after-tax)'
-      : 'Your setup — projected (after-tax)',
+      ? 'Portfolio — simulated (after-tax)'
+      : 'Portfolio — projected (after-tax)',
     data: displayAfterTax,
     borderColor: '#4A72B8',
     backgroundColor: 'rgba(74,114,184,0.08)',
@@ -97,19 +89,6 @@ function buildDatasets({
     pointRadius: 0, pointHoverRadius: 4,
     fill: true, tension: 0,
   });
-
-  // Comparison: opposite strategy (only shown when setup is all-Roth or all-Traditional)
-  if (showAltSeries) {
-    datasets.push({
-      label: altLabel,
-      data: altAfterTax,
-      borderColor: '#2A9D8F',
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      pointRadius: 0, pointHoverRadius: 4,
-      fill: false, tension: 0,
-    });
-  }
 
   // Simulation mode: dashed steady-growth reference so you can see variance
   if (chartMode === 'simulate') {

@@ -16,3 +16,16 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
   });
 });
+
+document.querySelectorAll('.tile-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const tile = header.closest('.input-tile');
+    const group = tile.closest('.account-row');
+    if (group) {
+      const collapsed = !tile.classList.contains('collapsed');
+      group.querySelectorAll('.input-tile').forEach(t => t.classList.toggle('collapsed', collapsed));
+    } else {
+      tile.classList.toggle('collapsed');
+    }
+  });
+});

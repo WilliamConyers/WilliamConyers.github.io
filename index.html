@@ -16,6 +16,11 @@
   <link rel="stylesheet" href="css/tiles.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/calculator.css">
+  <link rel="stylesheet" href="css/bus.css">
+
+  <!-- Leaflet (used by bus tracker tab) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Chart.js (used by calculator tab) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -29,6 +34,7 @@
   <nav class="tab-bar">
     <div class="tab active" data-tab="home">Home</div>
     <div class="tab" data-tab="calculator">Net Worth Calculator</div>
+    <div class="tab" data-tab="buses">SF Muni — Route 7</div>
   </nav>
 
   <div class="page">
@@ -55,7 +61,7 @@
 
         <!-- 401k -->
         <div class="input-tile tile-blue">
-          <div class="tile-header"><span>401k</span></div>
+          <div class="tile-header"><span>401k</span><span class="tile-collapse-icon">▾</span></div>
           <div class="tile-body">
 
             <div class="type-pill-wrap">
@@ -87,9 +93,15 @@
 
             <hr class="field-hr">
 
-            <div class="field">
-              <label>Current 401k Balance ($)</label>
-              <input type="number" id="k401-balance" value="25000" min="0" step="1000">
+            <div class="balance-section">
+              <div class="field">
+                <label>Current Roth Balance ($)</label>
+                <input type="number" id="k401-roth-balance" value="25000" min="0" step="1000">
+              </div>
+              <div class="field">
+                <label>Current Trad Balance ($)</label>
+                <input type="number" id="k401-trad-balance" value="0" min="0" step="1000">
+              </div>
             </div>
 
           </div>
@@ -97,7 +109,7 @@
 
         <!-- IRA -->
         <div class="input-tile tile-plum">
-          <div class="tile-header"><span>IRA</span></div>
+          <div class="tile-header"><span>IRA</span><span class="tile-collapse-icon">▾</span></div>
           <div class="tile-body">
 
             <div class="type-pill-wrap">
@@ -118,9 +130,15 @@
 
             <hr class="field-hr">
 
-            <div class="field">
-              <label>Current IRA Balance ($)</label>
-              <input type="number" id="ira-balance" value="5000" min="0" step="1000">
+            <div class="balance-section">
+              <div class="field">
+                <label>Current Roth Balance ($)</label>
+                <input type="number" id="ira-roth-balance" value="5000" min="0" step="1000">
+              </div>
+              <div class="field">
+                <label>Current Trad Balance ($)</label>
+                <input type="number" id="ira-trad-balance" value="0" min="0" step="1000">
+              </div>
             </div>
 
           </div>
@@ -139,12 +157,12 @@
           <button class="info-btn">i</button>
           <div class="info-tooltip">
             <strong>Market Simulation Model</strong>
-            Simulates annual portfolio movements using Geometric Brownian Motion (GBM) —
+            Simulates monthly portfolio movements using Geometric Brownian Motion (GBM) —
             the industry-standard model for asset prices.<br><br>
-            Each year the portfolio changes by:<br>
-            <em>exp((μ − σ²/2) + σ·Z)</em><br><br>
-            where μ is your return rate, σ = 16% (historical S&amp;P 500 volatility), and Z
-            is a random standard normal draw. Expected long-run outcome matches steady growth,
+            Each month the portfolio changes by:<br>
+            <em>exp((μ − σ²/2)·dt + σ·√dt·Z)</em><br><br>
+            where μ is your return rate, σ = 16% (historical S&amp;P 500 volatility), dt = 1/12,
+            and Z is a random standard normal draw. Expected long-run outcome matches steady growth,
             but paths swing — as in real markets.
           </div>
         </div>
@@ -153,17 +171,11 @@
 
       <!-- Result summary cards -->
       <div class="results">
-        <div class="result-card roth-card">
-          <div class="rc-label">Roth — Tax-Free Value</div>
-          <div class="rc-value" id="res-roth">—</div>
-          <div class="rc-sub" id="res-roth-sub">Tax-free at withdrawal</div>
-          <div class="rc-breakdown" id="res-roth-breakdown"></div>
-        </div>
-        <div class="result-card trad-card">
-          <div class="rc-label">Traditional — After-Tax</div>
-          <div class="rc-value" id="res-trad">—</div>
-          <div class="rc-sub" id="res-trad-sub">Taxed at withdrawal</div>
-          <div class="rc-breakdown" id="res-trad-breakdown"></div>
+        <div class="result-card portfolio-card">
+          <div class="rc-label">Portfolio Value</div>
+          <div class="rc-value" id="res-portfolio">—</div>
+          <div class="rc-sub" id="res-portfolio-sub">After-tax at retirement</div>
+          <div class="rc-breakdown" id="res-portfolio-breakdown"></div>
         </div>
         <div class="result-card contrib-card">
           <div class="rc-label">Total Contributed</div>
@@ -180,7 +192,7 @@
 
       <!-- Profile tile (at bottom — these are slow-changing assumptions) -->
       <div class="input-tile tile-amber profile-row" style="margin-top: 14px">
-        <div class="tile-header">Your Profile</div>
+        <div class="tile-header"><span>Your Profile</span><span class="tile-collapse-icon">▾</span></div>
         <div class="tile-body-grid">
           <div class="field">
             <label>Annual Salary ($)</label>
@@ -214,12 +226,40 @@
         Roth: contribute after-tax dollars, withdraw tax-free.
         Traditional: defer taxes now, pay at your retirement bracket.
         Choose whichever rate you expect to be lower.<br>
-        2026 IRS limits: 401k employee contributions $23,500/yr · IRA $7,000/yr.
+        2026 IRS limits: 401k employee $23,500/yr · 401k total (employee + employer) $70,000/yr · IRA $7,000/yr.
+        Employer match is capped so combined contributions stay within the $70,000 415 limit.
+        Limits are projected to grow ~2.5%/yr (inflation-adjusted in $500 steps, matching historical IRS adjustments).
         Roth IRA income phaseout begins at $150k (single) / $236k (MFJ).
         Traditional IRA deductibility limits may apply.
       </p>
 
     </div><!-- /tab-calculator -->
+
+    <!-- ── SF Muni Route 7 Bus Tracker ────────── -->
+    <div class="tab-content" id="tab-buses">
+      <h1>SF Muni — Route 7</h1>
+      <hr class="divider">
+
+      <!-- API key setup screen -->
+      <div id="bus-setup" class="bus-setup">
+        <p>Live bus locations are powered by the free 511 SF Bay API.</p>
+        <p>Get a free key at <a href="https://511.org/open-data/token" target="_blank">511.org/open-data/token</a>, then paste it below.</p>
+        <div class="bus-setup-row">
+          <input type="text" id="bus-api-key-input" placeholder="Paste your 511 API key…" autocomplete="off">
+          <button id="bus-api-key-save" class="bus-btn">Show buses</button>
+        </div>
+      </div>
+
+      <!-- Map + controls (hidden until key is set) -->
+      <div id="bus-tracker" class="bus-tracker" style="display:none">
+        <div class="bus-toolbar">
+          <span id="bus-status" class="bus-status"></span>
+          <button id="bus-refresh" class="bus-btn">↺ Refresh</button>
+          <button id="bus-clear-key" class="bus-btn bus-btn-ghost">Change API key</button>
+        </div>
+        <div id="bus-map"></div>
+      </div>
+    </div><!-- /tab-buses -->
 
   </div><!-- /page -->
 
@@ -234,6 +274,7 @@
   <script src="js/calculator/math.js"></script>
   <script src="js/calculator/chart.js"></script>
   <script src="js/calculator/calculator.js"></script>
+  <script src="js/bus/bus.js"></script>
 
 </body>
 </html>
