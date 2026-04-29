@@ -1,53 +1,45 @@
 /* ─────────────────────────────────────────────
    components.css
-   Reusable UI components: Roth/Traditional pill
-   toggle, chart-mode pill toggle, info tooltip,
-   and the re-run button.
-
-   These components are designed to be reusable
-   across pages — keep them page-agnostic.
+   Reusable UI components: account type pill,
+   chart mode toggle, info tooltip, re-run button.
 ───────────────────────────────────────────── */
 
-/* ── Account type pill (Roth / Traditional) ──
-   Sits inside an .input-tile. Active color inherits
-   from the parent tile's color class so each account
-   tile can have its own accent. */
+/* ── Account type pill (Roth / Traditional) ── */
 .type-pill-wrap {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 .type-pill-label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: rgba(45,44,41,0.45);
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-ink-subtle);
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 .type-pill {
   display: inline-flex;
-  background: rgba(0,0,0,0.05);
-  border-radius: 8px;
+  background: rgba(70, 95, 105, 0.08);
+  border-radius: 6px;
   padding: 3px;
   gap: 2px;
   align-self: flex-start;
 }
 .type-opt {
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   padding: 5px 13px;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  color: rgba(45,44,41,0.45);
+  color: var(--color-ink-subtle);
   transition: background 0.15s, color 0.15s;
   user-select: none;
   white-space: nowrap;
 }
-/* Active color matches parent tile — add an entry here when adding a new tile color */
-.tile-blue  .type-opt.active { background: #4A72B8; color: #fff; }
-.tile-teal  .type-opt.active { background: #2A9D8F; color: #fff; }
-.tile-plum  .type-opt.active { background: #7B5EA7; color: #fff; }
-.tile-amber .type-opt.active { background: #B8764A; color: #fff; }
+.tile-blue  .type-opt.active { background: var(--color-slate);      color: var(--color-cream); }
+.tile-teal  .type-opt.active { background: var(--color-slate-soft); color: var(--color-cream); }
+.tile-plum  .type-opt.active { background: var(--color-ochre);      color: var(--color-cream); }
+.tile-amber .type-opt.active { background: var(--color-terracotta); color: var(--color-cream); }
 
 /* ── View / projection mode toggle ── */
 .view-toggle-row {
@@ -57,34 +49,33 @@
   margin-bottom: 14px;
 }
 .view-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: rgba(45,44,41,0.38);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-ink-faint);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 1px;
   white-space: nowrap;
 }
 .pill-toggle {
   display: flex;
-  background: rgba(0,0,0,0.06);
-  border-radius: 9px;
+  background: rgba(70, 95, 105, 0.08);
+  border-radius: 6px;
   padding: 3px;
   gap: 2px;
 }
 .pill-option {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   padding: 5px 14px;
-  border-radius: 7px;
+  border-radius: 4px;
   cursor: pointer;
-  color: rgba(45,44,41,0.45);
+  color: var(--color-ink-subtle);
   transition: background 0.15s, color 0.15s;
   user-select: none;
 }
 .pill-option.active {
-  background: #4A72B8;
-  color: #fff;
-  box-shadow: 0 1px 4px rgba(74,114,184,0.3);
+  background: var(--color-slate);
+  color: var(--color-cream);
 }
 
 /* ── Info (ⓘ) button + hover tooltip ── */
@@ -93,17 +84,17 @@
 .info-btn {
   width: 20px; height: 20px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45,44,41,0.25);
+  border: 0.5px solid var(--color-border);
   background: transparent;
-  color: rgba(45,44,41,0.4);
-  font-size: 0.7rem;
+  color: var(--color-ink-faint);
+  font-size: 11px;
   font-family: inherit;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: border-color 0.15s, color 0.15s;
   flex-shrink: 0;
 }
-.info-btn:hover { border-color: #4A72B8; color: #4A72B8; }
+.info-btn:hover { border-color: var(--color-slate); color: var(--color-slate); }
 
 .info-tooltip {
   display: none;
@@ -112,33 +103,32 @@
   left: 50%;
   transform: translateX(-50%);
   width: 290px;
-  background: #2d2c29;
-  color: rgba(255,255,255,0.82);
-  font-size: 0.77rem;
+  background: var(--color-ink);
+  color: rgba(247, 240, 222, 0.82);
+  font-size: 12px;
   line-height: 1.6;
   padding: 13px 15px;
-  border-radius: 9px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+  border-radius: 8px;
   z-index: 200;
   pointer-events: none;
 }
-.info-tooltip strong { color: #fff; display: block; margin-bottom: 6px; font-size: 0.82rem; }
-.info-tooltip em     { font-style: normal; font-family: monospace; font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+.info-tooltip strong { color: var(--color-cream); display: block; margin-bottom: 6px; font-size: 13px; }
+.info-tooltip em     { font-style: normal; font-family: monospace; font-size: 11px; color: rgba(247, 240, 222, 0.6); }
 .info-wrap:hover .info-tooltip { display: block; }
 
-/* ── Re-run button (shown only in simulation mode) ── */
+/* ── Re-run button ── */
 .rerun-btn {
   font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   padding: 5px 13px;
-  border-radius: 7px;
-  border: 1.5px solid rgba(74,114,184,0.4);
+  border-radius: 6px;
+  border: 0.5px solid var(--color-border);
   background: transparent;
-  color: #4A72B8;
+  color: var(--color-slate);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s;
   display: none;
 }
-.rerun-btn:hover   { background: rgba(74,114,184,0.08); border-color: #4A72B8; }
+.rerun-btn:hover   { background: var(--color-cream-tint); }
 .rerun-btn.visible { display: block; }

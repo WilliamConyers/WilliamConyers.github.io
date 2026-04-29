@@ -1,22 +1,40 @@
 /* ─────────────────────────────────────────────
    tabs.js
-   Drives the top-level tab bar.
+   Section navigation and calculator tile collapse.
 
-   Convention: each tab has data-tab="<id>" and
-   a corresponding <div id="tab-<id>"> in the page.
-   Adding a new tab only requires matching HTML —
-   no changes needed here.
+   Navigation: any element with [data-section] switches
+   to #panel-<id> and marks the matching .nav-link active.
 ───────────────────────────────────────────── */
 
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+function showPanel(id) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const activeLink = document.querySelector('.nav-link[data-section="' + id + '"]');
+  if (activeLink) activeLink.classList.add('active');
+
+  window.scrollTo(0, 0);
+
+  // Chart.js initializes while the panel is hidden (0-width canvas).
+  // Resize and re-render on first reveal so the chart fills the container.
+  if (id === 'calculator') {
+    setTimeout(() => {
+      if (typeof growthChart !== 'undefined') growthChart.resize();
+      if (typeof calculate === 'function') calculate();
+    }, 0);
+  }
+}
+
+document.querySelectorAll('[data-section]').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    showPanel(el.dataset.section);
   });
 });
 
+/* Calculator input tile collapse (syncs both account tiles) */
 document.querySelectorAll('.tile-header').forEach(header => {
   header.addEventListener('click', () => {
     const tile = header.closest('.input-tile');

@@ -1,0 +1,61 @@
+/* ─────────────────────────────────────────────
+   tools.css
+   Tool card containers within the Small Useful
+   Things section. Each card wraps a full tool UI.
+───────────────────────────────────────────── */
+
+.tool-card {
+  padding-top: 32px;
+  margin-bottom: 56px;
+  border-top: 1px solid var(--color-border);
+}
+.tool-card:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.tool-card-intro {
+  margin-bottom: 28px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tool-badge {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  background: var(--color-section-tools);
+  color: var(--color-cream);
+  padding: 3px 9px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tool-card-desc {
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+}
+
+/* ── Tool navigation tile grid (2-col) ── */
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .tool-card-intro { flex-direction: column; gap: 8px; }
+  .section-grid   { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .section-grid   { grid-template-columns: 1fr; }
+}

@@ -1,27 +1,49 @@
 /* ─────────────────────────────────────────────
    base.css
-   Global reset, body defaults, and typography.
-   Applies site-wide — not specific to any page.
+   CSS custom properties, global reset, body,
+   and base typography. Apply site-wide.
 ───────────────────────────────────────────── */
+
+:root {
+  --color-cream:         #F7F0DE;
+  --color-cream-tint:    rgba(70, 95, 105, 0.04);
+  --color-slate:         #46606A;
+  --color-slate-soft:    #5A7A82;
+  --color-ink:           #2C3D45;
+  --color-ink-muted:     #4A5A60;
+  --color-ink-subtle:    #6A7A80;
+  --color-ink-faint:     #8A969A;
+  --color-terracotta:    #B85A3F;
+  --color-ochre:         #C4983F;
+  --color-border:        rgba(70, 95, 105, 0.15);
+
+  --color-section-fantasy: #B85A3F;
+  --color-section-data:    #C4983F;
+  --color-section-tools:   #46606A;
+}
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Remove number spinners across all browsers */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
 input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 
 body {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  background: #EDECEA;
-  color: #2d2c29;
-  font-size: 16px;
-  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-size: 14px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-p   { color: rgba(45,44,41,0.75); margin-bottom: 8px; }
-a   { color: #4A72B8; text-decoration: none; border-bottom: 1px solid rgba(74,114,184,0.3); padding-bottom: 1px; }
-a:hover { border-color: #4A72B8; }
+p { color: var(--color-ink-muted); }
 
-.divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 20px 0; }
+a { color: var(--color-terracotta); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.divider {
+  border: none;
+  border-top: 0.5px solid var(--color-border);
+  margin: 20px 0;
+}

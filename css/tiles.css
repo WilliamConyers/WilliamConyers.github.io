@@ -1,28 +1,24 @@
 /* ─────────────────────────────────────────────
    tiles.css
    Input tile shells, color variants, body layouts,
-   form fields, and input rows.
-
-   To add a new tile color: add a .tile-{name} rule
-   under "Color variants" and a matching .type-opt.active
-   rule under "Account type pill" in components.css.
+   form fields, and input rows. Used by the calculator.
 ───────────────────────────────────────────── */
 
 /* ── Tile shell ── */
 .input-tile {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--color-cream);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  border: 0.5px solid var(--color-border);
 }
 
 .tile-header {
-  padding: 11px 16px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-cream);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,11 +46,11 @@
   padding-bottom: 0;
 }
 
-/* ── Color variants ── */
-.tile-blue  .tile-header { background: #4A72B8; }
-.tile-teal  .tile-header { background: #2A9D8F; }
-.tile-plum  .tile-header { background: #7B5EA7; }
-.tile-amber .tile-header { background: #B8764A; }
+/* ── Color variants (mapped to new palette) ── */
+.tile-blue  .tile-header { background: var(--color-slate); }
+.tile-teal  .tile-header { background: var(--color-slate-soft); }
+.tile-plum  .tile-header { background: var(--color-ochre); }
+.tile-amber .tile-header { background: var(--color-terracotta); }
 
 /* ── Tile body layouts ── */
 .tile-body {
@@ -64,7 +60,6 @@
   gap: 12px;
 }
 
-/* Grid body — used for the profile tile (3-col by default) */
 .tile-body-grid {
   padding: 16px;
   display: grid;
@@ -86,37 +81,35 @@
 .field { display: flex; flex-direction: column; gap: 4px; }
 
 .field label {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: rgba(45,44,41,0.45);
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-ink-subtle);
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
 .field input {
   font-family: inherit;
-  font-size: 0.95rem;
-  color: #2d2c29;
-  background: #F8F7F5;
-  border: 1.5px solid rgba(0,0,0,0.09);
-  border-radius: 7px;
+  font-size: 14px;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-border);
+  border-radius: 6px;
   padding: 8px 11px;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s;
   width: 100%;
 }
 .field input:focus {
-  border-color: #4A72B8;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(74,114,184,0.1);
+  border-color: var(--color-slate);
+  border-width: 1px;
 }
 
-/* Amber highlight when value exceeds an IRS cap */
-.field input.over-cap { border-color: #C98A2A; }
+.field input.over-cap { border-color: var(--color-ochre); }
 
 .cap-warning {
-  font-size: 0.7rem;
-  color: #C98A2A;
+  font-size: 11px;
+  color: var(--color-ochre);
   font-weight: 500;
   display: none;
 }
@@ -127,18 +120,16 @@
 .input-row input { flex: 1; min-width: 0; }
 
 .dollar-equiv {
-  font-size: 0.82rem;
-  color: rgba(45,44,41,0.35);
+  font-size: 12px;
+  color: var(--color-ink-faint);
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 400;
   min-width: 76px;
   text-align: right;
 }
 
-/* Thin section divider inside a tile body */
-.field-hr { border: none; border-top: 1px solid rgba(0,0,0,0.07); margin: 2px 0; }
+.field-hr { border: none; border-top: 0.5px solid var(--color-border); margin: 2px 0; }
 
-/* Balance section pins to the bottom of the tile so both tiles align across the grid */
 .balance-section {
   margin-top: auto;
   display: flex;

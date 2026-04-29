@@ -1,0 +1,115 @@
+/* ─────────────────────────────────────────────
+   landing.css
+   Landing page hero and the three section
+   navigation tiles.
+───────────────────────────────────────────── */
+
+/* ── Hero ── */
+.landing-hero {
+  padding: 64px 0 52px;
+  max-width: 560px;
+}
+
+.hero-name {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  color: var(--color-ink);
+  margin-bottom: 18px;
+}
+
+.hero-statement {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* ── Section navigation tiles ── */
+.section-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding-bottom: 64px;
+}
+
+.section-tile {
+  border-radius: 8px;
+  padding: 24px 20px 22px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 190px;
+  transition: opacity 0.15s;
+  cursor: pointer;
+}
+.section-tile:hover { opacity: 0.88; text-decoration: none; }
+
+.tile-fantasy    { background: var(--color-section-fantasy); }
+.tile-data       { background: var(--color-section-data); }
+.tile-tools      { background: var(--color-section-tools); }
+.tile-calculator { background: var(--color-slate); }
+.tile-buses      { background: var(--color-slate-soft); }
+
+.tile-eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(247, 240, 222, 0.6);
+}
+
+.tile-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-cream);
+  line-height: 1.3;
+  margin: 0;
+  min-height: calc(2 * 1.3em);
+}
+
+.tile-teaser {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(247, 240, 222, 0.72);
+  flex: 1;
+  margin: 0;
+}
+
+.tile-arrow {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(247, 240, 222, 0.8);
+  display: block;
+  margin-top: 4px;
+}
+
+/* ── Landing footer (social icon buttons) ── */
+.landing-footer {
+  position: fixed;
+  bottom: 28px;
+  left: 48px;
+  display: flex;
+  gap: 16px;
+}
+
+.social-icon-btn {
+  color: var(--color-terracotta);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.social-icon-btn:hover { opacity: 0.65; text-decoration: none; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .landing-hero   { padding: 40px 0 36px; }
+  .section-tiles  { grid-template-columns: 1fr; gap: 10px; }
+  .section-tile   { min-height: unset; }
+  .landing-footer { left: 20px; }
+}

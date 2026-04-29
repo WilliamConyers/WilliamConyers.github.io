@@ -1,55 +1,151 @@
 /* ─────────────────────────────────────────────
    layout.css
-   Tab bar, page container, headings, and
-   responsive breakpoints for structural elements.
-   Add new top-level page sections here.
+   Site navigation, main container, section
+   panel show/hide, section headers, back button.
 ───────────────────────────────────────────── */
 
-/* ── Tab bar ── */
-.tab-bar {
-  background: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.07);
+/* ── Site nav ── */
+.site-nav {
+  background: var(--color-cream);
+  border-bottom: 0.5px solid var(--color-border);
   display: flex;
-  padding: 0 32px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  height: 52px;
 }
 
-.tab {
-  font-size: 0.875rem;
+.nav-brand {
+  font-size: 14px;
   font-weight: 500;
-  color: rgba(45,44,41,0.45);
-  padding: 14px 18px;
+  letter-spacing: -0.2px;
+  color: var(--color-ink);
+  text-decoration: none;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.15s, border-color 0.15s;
-  user-select: none;
+  flex-shrink: 0;
 }
-.tab:hover  { color: #2d2c29; }
-.tab.active { color: #4A72B8; border-bottom-color: #4A72B8; }
+.nav-brand:hover { text-decoration: none; }
 
-/* ── Page container ── */
-.page { max-width: 960px; margin: 0 auto; padding: 40px 32px 120px; }
-
-/* Tab content panels — JS toggles .active */
-.tab-content        { display: none; }
-.tab-content.active { display: block; }
-
-h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 28px;
-  color: #2d2c29;
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
+
+.nav-link {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+}
+.nav-link:hover { background: var(--color-cream-tint); color: var(--color-ink); text-decoration: none; }
+.nav-link.active { background: var(--color-cream-tint); color: var(--color-ink); }
+.nav-link[data-section="fantasy"].active { color: var(--color-section-fantasy); }
+.nav-link[data-section="data"].active    { color: var(--color-section-data); }
+.nav-link[data-section="tools"].active   { color: var(--color-section-tools); }
+
+/* ── Main container ── */
+.site-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 48px 96px;
+}
+
+/* ── Section panels ── */
+.section-panel        { display: none; }
+.section-panel.active { display: block; }
+
+/* ── Section headers (fantasy / data / tools) ── */
+.section-header {
+  padding: 48px 0 28px;
+  margin-bottom: 36px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.back-btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-ink-subtle);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 20px;
+  transition: color 0.15s;
+}
+.back-btn:hover { color: var(--color-ink); }
+
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+}
+.eyebrow-fantasy { color: var(--color-section-fantasy); }
+.eyebrow-data    { color: var(--color-section-data); }
+.eyebrow-tools   { color: var(--color-section-tools); }
+
+.section-heading {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  color: var(--color-ink);
+}
+
+.placeholder-text {
+  font-size: 14px;
+  color: var(--color-ink-subtle);
+  padding: 48px 0;
+}
+
+/* ── Post article layout ── */
+.post-meta {
+  font-size: 11px;
+  color: var(--color-ink-faint);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.post-body {
+  max-width: 640px;
+  font-family: Charter, "Iowan Old Style", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--color-ink-muted);
+  padding-bottom: 80px;
+}
+
+.post-body p { margin-bottom: 22px; color: var(--color-ink-muted); }
+.post-body h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin: 36px 0 14px;
+}
+.post-body strong { color: var(--color-ink); font-weight: 500; }
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
-  .tab-bar { padding: 0 16px; }
-  .page    { padding: 28px 16px 100px; }
-  h1       { font-size: 1.6rem; }
+  .site-nav  { padding: 0 20px; }
+  .site-main { padding: 0 20px 80px; }
+  .nav-link  { padding: 6px 8px; font-size: 12px; }
+
+  .section-header { padding: 32px 0 20px; }
+  .section-heading { font-size: 22px; }
 }

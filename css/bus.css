@@ -1,15 +1,12 @@
 /* ─────────────────────────────────────────────
    bus.css
-   Styles for the SF Muni Route 7 bus tracker tab.
+   SF Muni Route 7 bus tracker.
 ───────────────────────────────────────────── */
 
 /* ── API key setup screen ── */
-.bus-setup {
-  max-width: 520px;
-}
-.bus-setup p {
-  margin-bottom: 10px;
-}
+.bus-setup { max-width: 520px; }
+.bus-setup p { margin-bottom: 10px; }
+
 .bus-setup-row {
   display: flex;
   gap: 10px;
@@ -19,45 +16,44 @@
 .bus-setup-row input {
   flex: 1;
   font-family: inherit;
-  font-size: 0.95rem;
-  color: #2d2c29;
-  background: #F8F7F5;
-  border: 1.5px solid rgba(0,0,0,0.09);
-  border-radius: 7px;
+  font-size: 14px;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-border);
+  border-radius: 6px;
   padding: 9px 12px;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s;
 }
 .bus-setup-row input:focus {
-  border-color: #4A72B8;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(74,114,184,0.1);
+  border-color: var(--color-slate);
+  border-width: 1px;
 }
 
-/* ── Shared button style ── */
+/* ── Shared button ── */
 .bus-btn {
   font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   padding: 9px 16px;
-  border-radius: 7px;
+  border-radius: 6px;
   border: none;
-  background: #4A72B8;
-  color: #fff;
+  background: var(--color-slate);
+  color: var(--color-cream);
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: opacity 0.15s;
 }
-.bus-btn:hover { background: #3a5fa0; }
+.bus-btn:hover { opacity: 0.85; }
 
 .bus-btn-ghost {
   background: transparent;
-  color: rgba(45,44,41,0.5);
-  border: 1.5px solid rgba(0,0,0,0.12);
+  color: var(--color-ink-subtle);
+  border: 0.5px solid var(--color-border);
 }
 .bus-btn-ghost:hover {
-  background: rgba(0,0,0,0.04);
-  color: #2d2c29;
+  background: var(--color-cream-tint);
+  color: var(--color-ink);
 }
 
 /* ── Tracker layout ── */
@@ -71,22 +67,21 @@
 
 .bus-status {
   flex: 1;
-  font-size: 0.82rem;
-  color: rgba(45,44,41,0.5);
-  font-weight: 500;
+  font-size: 12px;
+  color: var(--color-ink-subtle);
+  font-weight: 400;
 }
-.bus-status.error { color: #c0392b; }
+.bus-status.error { color: var(--color-terracotta); }
 
 /* ── Map ── */
 #bus-map {
   width: 100%;
   height: 520px;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
 }
 
-/* ── Bus marker pulse ── */
+/* ── Bus marker ── */
 .bus-marker-wrap {
   position: relative;
   width: 28px;
@@ -95,19 +90,17 @@
 .bus-dot {
   width: 18px;
   height: 18px;
-  background: #4A72B8;
-  border: 2.5px solid #fff;
+  border: 2.5px solid var(--color-cream);
   border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
   position: absolute;
   top: 5px; left: 5px;
 }
-.bus-dot-inbound  { background: #4A72B8; }
-.bus-dot-outbound { background: #2A9D8F; }
+.bus-dot-inbound  { background: var(--color-terracotta); }
+.bus-dot-outbound { background: var(--color-ochre); }
 
 /* ── Popup ── */
-.bus-popup { font-family: 'Inter', sans-serif; font-size: 0.8rem; line-height: 1.6; min-width: 140px; }
-.bus-popup strong { display: block; font-size: 0.85rem; margin-bottom: 2px; }
+.bus-popup { font-family: inherit; font-size: 12px; line-height: 1.6; min-width: 140px; }
+.bus-popup strong { display: block; font-size: 13px; margin-bottom: 2px; }
 
 @media (max-width: 700px) {
   #bus-map { height: 380px; }
