@@ -52,10 +52,9 @@
 }
 
 /* ── Responsive ── */
+@media (max-width: 700px) {
+  .section-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 600px) {
   .tool-card-intro { flex-direction: column; gap: 8px; }
-  .section-grid   { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 480px) {
-  .section-grid   { grid-template-columns: 1fr; }
 }

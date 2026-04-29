@@ -108,8 +108,9 @@
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
-  .landing-hero   { padding: 40px 0 36px; }
+  .landing-hero   { padding: 40px 0 32px; }
+  .hero-name      { font-size: 26px; }
   .section-tiles  { grid-template-columns: 1fr; gap: 10px; }
   .section-tile   { min-height: unset; }
-  .landing-footer { left: 20px; }
+  .landing-footer { left: 20px; bottom: 20px; }
 }

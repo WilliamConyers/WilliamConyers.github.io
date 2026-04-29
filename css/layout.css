@@ -144,8 +144,10 @@
 @media (max-width: 700px) {
   .site-nav  { padding: 0 20px; }
   .site-main { padding: 0 20px 80px; }
-  .nav-link  { padding: 6px 8px; font-size: 12px; }
 
-  .section-header { padding: 32px 0 20px; }
+  /* Nav links are too long for mobile — landing tiles + back buttons handle navigation */
+  .nav-links { display: none; }
+
+  .section-header  { padding: 32px 0 20px; }
   .section-heading { font-size: 22px; }
 }
