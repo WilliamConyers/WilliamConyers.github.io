@@ -3,8 +3,9 @@
    Next three Muni 7 arrivals at Haight & Stanyan
    (the Stanyan/Shrader stop), inbound and outbound.
 
-   Uses 511 SF Bay StopMonitoring for real predicted
-   arrival times (ExpectedArrivalTime).
+   StopMonitoring gives accurate predicted arrival times.
+   VehicleMonitoring gives each bus's current next stop.
+   The two are joined by VehicleRef.
 
    Stop codes confirmed from sfmta.com:
      14963 — Haight & Stanyan, inbound (toward downtown)
@@ -75,13 +76,17 @@ async function fetchArrivals() {
   setArrStatus('Updating…');
 
   try {
-    const [ibData, obData] = await Promise.all([
-      fetchStop(apiKey, ARR_STOP_IB),
-      fetchStop(apiKey, ARR_STOP_OB),
+    const [ibData, obData, vmData] = await Promise.all([
+      fetchJSON(`https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${ARR_STOP_IB}&format=json`),
+      fetchJSON(`https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${ARR_STOP_OB}&format=json`),
+      fetchJSON(`https://api.511.org/transit/VehicleMonitoring?api_key=${apiKey}&agency=SF&format=json`),
     ]);
 
-    const ib = parseVisits(ibData);
-    const ob = parseVisits(obData);
+    // Build VehicleRef → current next stop name from live GPS data
+    const nextStopMap = buildNextStopMap(vmData);
+
+    const ib = parseVisits(ibData, nextStopMap);
+    const ob = parseVisits(obData, nextStopMap);
 
     renderArrivals('arr-ib', ib.slice(0, 3));
     renderArrivals('arr-ob', ob.slice(0, 3));
@@ -99,25 +104,37 @@ async function fetchArrivals() {
   }
 }
 
-/* ── StopMonitoring fetch ── */
-async function fetchStop(apiKey, stopCode) {
-  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&MaximumNumberOfCalls.Onwards=1&format=json`;
+/* ── Fetch helper (strips UTF-8 BOM that 511 sometimes prepends) ── */
+async function fetchJSON(url) {
   const res = await fetch(url);
-
   if (!res.ok) {
     if (res.status === 401 || res.status === 403) throw new Error('key invalid');
     throw new Error(`API error ${res.status}`);
   }
-
-  // 511 API sometimes prepends a UTF-8 BOM — strip it before parsing
   const text = await res.text();
   return JSON.parse(text.replace(/^﻿/, ''));
 }
 
-/* ── Parse StopMonitoring visits ── */
-function parseVisits(data) {
+/* ── Build VehicleRef → next stop name from VehicleMonitoring ── */
+function buildNextStopMap(data) {
+  const map = {};
   try {
-    // 511 wraps in Siri on some endpoints, not others
+    const delivery   = data?.Siri?.ServiceDelivery?.VehicleMonitoringDelivery;
+    const container  = Array.isArray(delivery) ? delivery[0] : delivery;
+    const activities = container?.VehicleActivity ?? [];
+    for (const a of activities) {
+      const j   = a?.MonitoredVehicleJourney;
+      const ref = j?.VehicleRef;
+      const name = extractName(j?.MonitoredCall?.StopPointName);
+      if (ref && name) map[ref] = name;
+    }
+  } catch {}
+  return map;
+}
+
+/* ── Parse StopMonitoring visits ── */
+function parseVisits(data, nextStopMap) {
+  try {
     const svc       = data?.Siri?.ServiceDelivery ?? data?.ServiceDelivery ?? data;
     const delivery  = svc?.StopMonitoringDelivery;
     const container = Array.isArray(delivery) ? delivery[0] : delivery;
@@ -127,7 +144,6 @@ function parseVisits(data) {
     return visits
       .map(v => {
         const journey = v?.MonitoredVehicleJourney;
-        // Filter to Route 7 only (stop may serve other routes)
         if (!isRoute7(journey?.LineRef)) return null;
 
         const call    = journey?.MonitoredCall;
@@ -137,11 +153,11 @@ function parseVisits(data) {
         const arrivalMs = new Date(timeStr).getTime();
         if (isNaN(arrivalMs)) return null;
 
-        // DestinationDisplay is the short terminus label ("Transit Center", "Ocean Beach")
-        const dest = extractName(call?.DestinationDisplay) || extractName(journey?.DestinationName);
+        const vehicleRef = journey?.VehicleRef;
+        const nextStop   = nextStopMap[vehicleRef] ?? '';
 
         const mins = Math.max(0, Math.round((arrivalMs - now) / 60000));
-        return { mins, arrivalMs, dest };
+        return { mins, arrivalMs, nextStop };
       })
       .filter(v => v !== null && v.arrivalMs >= now - 60000)
       .sort((a, b) => a.arrivalMs - b.arrivalMs);
@@ -160,8 +176,8 @@ function renderArrivals(elId, buses) {
   el.innerHTML = buses.map(v => {
     const isNow    = v.mins <= 1;
     const unit     = isNow ? '' : '<span class="arr-unit">min</span>';
-    const nextStop = v.dest
-      ? `<span class="arr-dest"><span class="arr-dest-label">to</span>${v.dest}</span>`
+    const nextStop = v.nextStop
+      ? `<span class="arr-dest"><span class="arr-dest-label">next stop</span>${v.nextStop}</span>`
       : '';
     return `<div class="arr-row">
       <span class="arr-mins">${isNow ? 'Now' : v.mins}${unit}</span>
@@ -179,7 +195,6 @@ function extractName(field) {
 }
 
 function isRoute7(lineRef) {
-  // LineRef can be "7", "SF:7", "7-Haight/Noriega", {value:"SF:7"}, etc.
   const s = String(lineRef?.value ?? lineRef ?? '').replace(/^[^:]+:/, '');
   return s === '7' || s.startsWith('7-') || s.startsWith('7 ');
 }
