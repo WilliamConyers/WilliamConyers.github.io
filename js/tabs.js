@@ -19,6 +19,7 @@ function showPanel(id) {
   const activeLink = document.querySelector('.nav-link[data-section="' + id + '"]');
   if (activeLink) activeLink.classList.add('active');
 
+  location.hash = id;
   window.scrollTo(0, 0);
 
   // Chart.js initializes while the panel is hidden (0-width canvas).
@@ -41,6 +42,12 @@ document.querySelectorAll('[data-section]').forEach(el => {
     showPanel(el.dataset.section);
   });
 });
+
+// Restore panel from URL hash on load/refresh
+const initialHash = location.hash.replace('#', '');
+if (initialHash && document.getElementById('panel-' + initialHash)) {
+  showPanel(initialHash);
+}
 
 /* Calculator input tile collapse (syncs both account tiles) */
 document.querySelectorAll('.tile-header').forEach(header => {
