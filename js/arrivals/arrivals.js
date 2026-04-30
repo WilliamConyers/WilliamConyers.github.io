@@ -156,6 +156,13 @@ function renderArrivals(elId, buses) {
 }
 
 /* ── Helpers ── */
+function extractName(field) {
+  if (!field) return '';
+  if (typeof field === 'string') return field;
+  if (Array.isArray(field)) return extractName(field[0]);
+  return field.value ?? field._ ?? '';
+}
+
 function haversineM(lat1, lon1, lat2, lon2) {
   const R    = 6371000;
   const phi1 = lat1 * Math.PI / 180, phi2 = lat2 * Math.PI / 180;
@@ -183,7 +190,9 @@ function parseVehicles(data) {
         lat:       parseFloat(loc?.Latitude),
         lon:       parseFloat(loc?.Longitude),
         direction: j?.DirectionRef                        ?? '',
-        nextStop:  j?.MonitoredCall?.StopPointName        ?? '',
+        nextStop:  extractName(j?.MonitoredCall?.StopPointName)
+                || extractName(j?.DestinationName)
+                || '',
       };
     }).filter(v => isFinite(v.lat) && isFinite(v.lon));
   } catch {
