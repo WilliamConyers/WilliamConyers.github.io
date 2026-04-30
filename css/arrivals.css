@@ -1,0 +1,91 @@
+/* ─────────────────────────────────────────────
+   arrivals.css
+   Next 7 arrivals board at Haight & Shrader.
+───────────────────────────────────────────── */
+
+.arr-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.arr-status {
+  flex: 1;
+  font-size: 12px;
+  color: var(--color-ink-subtle);
+}
+.arr-status.error { color: var(--color-terracotta); }
+
+/* ── Two-column board ── */
+.arr-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+/* ── Column header ── */
+.arr-col-header {
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.arr-direction {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+}
+.arr-direction-sub {
+  font-size: 12px;
+  color: var(--color-ink-faint);
+  display: block;
+  margin-top: 4px;
+}
+
+.arr-col-ib .arr-direction { color: var(--color-terracotta); }
+.arr-col-ob .arr-direction { color: var(--color-ochre); }
+
+/* ── Arrival rows ── */
+.arr-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--color-border);
+}
+.arr-row:last-child { border-bottom: none; }
+
+.arr-mins {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  color: var(--color-ink);
+  line-height: 1;
+}
+
+.arr-unit {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-ink-muted);
+  margin-left: 5px;
+}
+
+.arr-dest {
+  font-size: 12px;
+  color: var(--color-ink-faint);
+}
+
+.arr-empty {
+  font-size: 13px;
+  color: var(--color-ink-faint);
+  padding: 20px 0;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .arr-columns { grid-template-columns: 1fr; gap: 28px; }
+}

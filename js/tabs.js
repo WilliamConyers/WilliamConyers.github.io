@@ -7,6 +7,10 @@
 ───────────────────────────────────────────── */
 
 function showPanel(id) {
+  // Stop live-refresh tools when navigating away from them
+  if (typeof stopArrTimer === 'function') stopArrTimer();
+  if (typeof stopRefresh  === 'function') stopRefresh();
+
   document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
   const panel = document.getElementById('panel-' + id);
   if (panel) panel.classList.add('active');
@@ -25,6 +29,10 @@ function showPanel(id) {
       if (typeof calculate === 'function') calculate();
     }, 0);
   }
+
+  // Start live tools when navigating to their panel
+  if (id === 'arrivals' && typeof startArrBoard === 'function') startArrBoard();
+  if (id === 'buses' && localStorage.getItem('sf511ApiKey') && typeof showTracker === 'function') showTracker();
 }
 
 document.querySelectorAll('[data-section]').forEach(el => {

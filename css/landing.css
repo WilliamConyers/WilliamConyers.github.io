@@ -51,6 +51,7 @@
 .tile-fantasy    { background: var(--color-section-fantasy); }
 .tile-data       { background: var(--color-section-data); }
 .tile-tools      { background: var(--color-section-tools); }
+.tile-arrivals   { background: var(--color-ink); }
 .tile-calculator { background: var(--color-slate); }
 .tile-buses      { background: var(--color-slate-soft); }
 

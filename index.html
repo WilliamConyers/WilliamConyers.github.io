@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/calculator.css">
   <link rel="stylesheet" href="css/bus.css">
+  <link rel="stylesheet" href="css/arrivals.css">
 
   <!-- Leaflet (bus tracker) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -156,6 +157,12 @@
       </header>
 
       <div class="section-grid">
+        <a class="section-tile tile-arrivals" href="#" data-section="arrivals">
+          <span class="tile-eyebrow">SF MUNI</span>
+          <h2 class="tile-title">Next 7 at Haight & Shrader</h2>
+          <p class="tile-teaser">Next three inbound and outbound arrivals at the Shrader–Stanyan stop with estimated minutes to arrival.</p>
+          <span class="tile-arrow">Open →</span>
+        </a>
         <a class="section-tile tile-buses" href="#" data-section="buses">
           <span class="tile-eyebrow">SF MUNI</span>
           <h2 class="tile-title">SF Muni — Route 7</h2>
@@ -379,6 +386,49 @@
 
     </section><!-- /panel-buses -->
 
+    <!-- ── Next 7 at Haight & Shrader ─────────── -->
+    <section class="section-panel" id="panel-arrivals">
+      <header class="section-header">
+        <button class="back-btn" data-section="tools">← Small Useful Things</button>
+        <span class="section-eyebrow eyebrow-tools">TOOLS</span>
+        <h1 class="section-heading">Next 7 at Haight & Shrader</h1>
+      </header>
+
+      <div id="arr-setup" class="bus-setup">
+        <p>Uses the same free 511 SF Bay API key as the bus tracker.</p>
+        <p>Get a key at <a href="https://511.org/open-data/token" target="_blank">511.org/open-data/token</a>, then paste it below.</p>
+        <div class="bus-setup-row">
+          <input type="text" id="arr-key-input" placeholder="Paste your 511 API key…" autocomplete="off">
+          <button id="arr-key-save" class="bus-btn">Check arrivals</button>
+        </div>
+      </div>
+
+      <div id="arr-board" style="display:none">
+        <div class="arr-toolbar">
+          <span id="arr-status" class="arr-status"></span>
+          <button id="arr-refresh" class="bus-btn">↺ Refresh</button>
+          <button id="arr-clear-key" class="bus-btn bus-btn-ghost">Change key</button>
+        </div>
+        <div class="arr-columns">
+          <div class="arr-col arr-col-ib">
+            <div class="arr-col-header">
+              <span class="arr-direction">Inbound</span>
+              <span class="arr-direction-sub">toward downtown</span>
+            </div>
+            <div id="arr-ib"></div>
+          </div>
+          <div class="arr-col arr-col-ob">
+            <div class="arr-col-header">
+              <span class="arr-direction">Outbound</span>
+              <span class="arr-direction-sub">toward Ocean Beach</span>
+            </div>
+            <div id="arr-ob"></div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /panel-arrivals -->
+
   </main>
 
   <script src="js/tabs.js"></script>
@@ -386,6 +436,7 @@
   <script src="js/calculator/chart.js"></script>
   <script src="js/calculator/calculator.js"></script>
   <script src="js/bus/bus.js"></script>
+  <script src="js/arrivals/arrivals.js"></script>
 
 </body>
 </html>
