@@ -1,18 +1,20 @@
 /* ─────────────────────────────────────────────
    arrivals/arrivals.js
-   Next three Muni 7 arrivals at Haight & Shrader,
-   inbound and outbound.
+   Next three Muni 7 arrivals at Haight & Stanyan
+   (the Stanyan/Shrader stop), inbound and outbound.
 
    Uses 511 SF Bay StopMonitoring for real predicted
-   arrival times. Stop codes are discovered once via
-   the stops API and cached in localStorage.
+   arrival times (ExpectedArrivalTime).
+
+   Stop codes confirmed from sfmta.com:
+     14963 — Haight & Stanyan, inbound (toward downtown)
+     14962 — Haight & Stanyan, outbound (toward Ocean Beach)
 ───────────────────────────────────────────── */
 
-const ARR_LAT       = 37.76990;
-const ARR_LON       = -122.44680;   // Haight St & Shrader St
-const ARR_REFRESH   = 30000;
-const ARR_KEY       = 'sf511ApiKey';
-const ARR_STOPS_KEY = 'arr7StopCodes';  // cached { ib, ob } stop codes
+const ARR_STOP_IB = '14963';
+const ARR_STOP_OB = '14962';
+const ARR_REFRESH = 30000;
+const ARR_KEY     = 'sf511ApiKey';
 
 let arrTimer = null;
 
@@ -38,7 +40,6 @@ document.getElementById('arr-refresh').addEventListener('click', fetchArrivals);
 
 document.getElementById('arr-clear-key').addEventListener('click', () => {
   localStorage.removeItem(ARR_KEY);
-  localStorage.removeItem(ARR_STOPS_KEY);
   stopArrTimer();
   document.getElementById('arr-board').style.display = 'none';
   document.getElementById('arr-setup').style.display = '';
@@ -74,15 +75,13 @@ async function fetchArrivals() {
   setArrStatus('Updating…');
 
   try {
-    const stops = await resolveStopCodes(apiKey);
-
-    const [ibRes, obRes] = await Promise.all([
-      fetchStopMonitoring(apiKey, stops.ib),
-      fetchStopMonitoring(apiKey, stops.ob),
+    const [ibData, obData] = await Promise.all([
+      fetchStop(apiKey, ARR_STOP_IB),
+      fetchStop(apiKey, ARR_STOP_OB),
     ]);
 
-    const ib = parseVisits(ibRes);
-    const ob = parseVisits(obRes);
+    const ib = parseVisits(ibData);
+    const ob = parseVisits(obData);
 
     renderArrivals('arr-ib', ib.slice(0, 3));
     renderArrivals('arr-ob', ob.slice(0, 3));
@@ -92,7 +91,7 @@ async function fetchArrivals() {
 
   } catch (err) {
     setArrStatus(
-      err.message.startsWith('API key')
+      (err.message || '').includes('key')
         ? 'Invalid API key — check your key and try again.'
         : 'Could not reach 511 API — check your connection.',
       true
@@ -100,90 +99,22 @@ async function fetchArrivals() {
   }
 }
 
-/* ─────────────────────────────────────────────
-   Stop code discovery
-   Queries the 511 stops API for Route 7, finds
-   the two nearest stops to ARR_LAT/ARR_LON, and
-   identifies which is IB vs OB from the direction
-   of the first StopMonitoring response.
-───────────────────────────────────────────── */
-async function resolveStopCodes(apiKey) {
-  const cached = localStorage.getItem(ARR_STOPS_KEY);
-  if (cached) {
-    try {
-      const p = JSON.parse(cached);
-      if (p.ib && p.ob) return p;
-    } catch {}
-  }
-
-  setArrStatus('Finding nearby stops…');
-  const codes = await discoverStopCodes(apiKey);
-  localStorage.setItem(ARR_STOPS_KEY, JSON.stringify(codes));
-  return codes;
-}
-
-async function discoverStopCodes(apiKey) {
-  const url = `https://api.511.org/transit/stops?api_key=${apiKey}&agency=SF&route_id=7&format=json`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    if (res.status === 401 || res.status === 403) throw new Error('API key invalid');
-    throw new Error(`Stops API error ${res.status}`);
-  }
-
-  const data = await res.json();
-  const stops = extractStopList(data);
-
-  if (!stops.length) throw new Error('No stops returned from API');
-
-  // Sort by distance to our target coordinates
-  const sorted = stops
-    .map(s => ({ ...s, dist: haversineM(ARR_LAT, ARR_LON, s.lat, s.lon) }))
-    .filter(s => isFinite(s.dist))
-    .sort((a, b) => a.dist - b.dist);
-
-  // The two nearest stops are the IB and OB stops at (or near) the intersection.
-  // They sit on opposite sides of Haight St, so one is slightly north and one south.
-  // Eastbound (IB) stops are on the south side of the street (lower latitude).
-  const pair = sorted.slice(0, 2);
-  if (pair.length < 2) throw new Error('Could not find a stop pair');
-
-  const [a, b] = pair.sort((x, y) => x.lat - y.lat); // a = more southern
-  return { ib: a.id, ob: b.id };
-}
-
-function extractStopList(data) {
-  // Handle the several JSON shapes the 511 API returns
-  let raw = data;
-
-  // Unwrap SIRI-style envelope if present
-  if (raw?.Contents?.dataObjects?.ScheduledStopPoint) {
-    raw = raw.Contents.dataObjects.ScheduledStopPoint;
-  } else if (raw?.body) {
-    raw = raw.body;
-  }
-
-  if (!Array.isArray(raw)) return [];
-
-  return raw.map(s => {
-    const id  = String(s.id ?? s.stop_id ?? s.Id ?? '').replace(/^[^:]+:/, '');
-    const lat = parseFloat(s.lat ?? s.stop_lat ?? s.Latitude  ?? s.Location?.Latitude);
-    const lon = parseFloat(s.lon ?? s.stop_lon ?? s.Longitude ?? s.Location?.Longitude);
-    return { id, lat, lon };
-  }).filter(s => s.id && isFinite(s.lat) && isFinite(s.lon));
-}
-
 /* ── StopMonitoring fetch ── */
-async function fetchStopMonitoring(apiKey, stopCode) {
-  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&LineRef=7&MaximumNumberOfCalls.Onwards=1&format=json`;
+async function fetchStop(apiKey, stopCode) {
+  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&format=json`;
   const res = await fetch(url);
+
   if (!res.ok) {
-    if (res.status === 401 || res.status === 403) throw new Error('API key invalid');
-    throw new Error(`StopMonitoring error ${res.status}`);
+    if (res.status === 401 || res.status === 403) throw new Error('key invalid');
+    throw new Error(`API error ${res.status}`);
   }
-  return res.json();
+
+  // 511 API sometimes prepends a UTF-8 BOM — strip it before parsing
+  const text = await res.text();
+  return JSON.parse(text.replace(/^﻿/, ''));
 }
 
-/* ── Parse StopMonitoring response ── */
+/* ── Parse StopMonitoring visits ── */
 function parseVisits(data) {
   try {
     const delivery  = data?.Siri?.ServiceDelivery?.StopMonitoringDelivery;
@@ -193,15 +124,18 @@ function parseVisits(data) {
 
     return visits
       .map(v => {
-        const journey  = v?.MonitoredVehicleJourney;
-        const call     = journey?.MonitoredCall;
-        const timeStr  = call?.ExpectedArrivalTime || call?.AimedArrivalTime;
+        const journey = v?.MonitoredVehicleJourney;
+        // Filter to Route 7 only (stop may serve other routes)
+        if (!isRoute7(journey?.LineRef)) return null;
+
+        const call    = journey?.MonitoredCall;
+        const timeStr = call?.ExpectedArrivalTime || call?.AimedArrivalTime;
         if (!timeStr) return null;
 
         const arrivalMs = new Date(timeStr).getTime();
         if (isNaN(arrivalMs)) return null;
 
-        // Next stop after ours, from OnwardCalls
+        // Next stop after ours, from OnwardCalls (if returned by API)
         const onward   = journey?.OnwardCalls?.OnwardCall;
         const nextRaw  = Array.isArray(onward) ? onward[0]?.StopPointName : onward?.StopPointName;
         const nextStop = extractName(nextRaw);
@@ -244,13 +178,8 @@ function extractName(field) {
   return field.value ?? field._ ?? '';
 }
 
-function haversineM(lat1, lon1, lat2, lon2) {
-  const R    = 6371000;
-  const phi1 = lat1 * Math.PI / 180, phi2 = lat2 * Math.PI / 180;
-  const dp   = (lat2 - lat1) * Math.PI / 180;
-  const dl   = (lon2 - lon1) * Math.PI / 180;
-  const a    = Math.sin(dp / 2) ** 2 + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dl / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+function isRoute7(lineRef) {
+  return String(lineRef ?? '').replace(/^[^:]+:/, '') === '7';
 }
 
 function setArrStatus(msg, isError = false) {
