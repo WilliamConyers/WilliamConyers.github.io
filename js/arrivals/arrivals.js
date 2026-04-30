@@ -89,12 +89,14 @@ async function fetchArrivals() {
 
     const data     = await res.json();
     const vehicles = parseVehicles(data).filter(v => isRoute7(v.lineRef));
+    const ib       = approaching(vehicles, true);
+    const ob       = approaching(vehicles, false);
 
-    renderArrivals('arr-ib', approaching(vehicles, true).slice(0, 3));
-    renderArrivals('arr-ob', approaching(vehicles, false).slice(0, 3));
+    renderArrivals('arr-ib', ib.slice(0, 3));
+    renderArrivals('arr-ob', ob.slice(0, 3));
 
     const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setArrStatus(`Updated ${ts} · ${vehicles.length} bus${vehicles.length !== 1 ? 'es' : ''} on route`);
+    setArrStatus(`Updated ${ts} · ${vehicles.length} buses tracked · ${ib.length} IB / ${ob.length} OB approaching`);
 
   } catch {
     setArrStatus('Could not reach 511 API — check your connection.', true);
@@ -119,7 +121,8 @@ function approaching(vehicles, inbound) {
       return inbound ? d.startsWith('i') : d.startsWith('o');
     })
     .filter(v => {
-      if (Math.abs(v.lat - ARR_STOP_LAT) > 0.004) return false; // not on Haight corridor
+      // Longitude gate only — route 7 crosses multiple streets at different
+      // latitudes (Noriega, Lincoln, Haight) so a lat filter misses most buses.
       return inbound
         ? v.lon < ARR_STOP_LON + buffer   // west of stop → IB approaching
         : v.lon > ARR_STOP_LON - buffer;  // east of stop → OB approaching
