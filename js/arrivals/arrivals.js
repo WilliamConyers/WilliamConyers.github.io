@@ -84,6 +84,7 @@ async function fetchArrivals() {
 
     // Build VehicleRef → current next stop name from live GPS data
     const nextStopMap = buildNextStopMap(vmData);
+    console.log('[arrivals] nextStopMap sample:', Object.entries(nextStopMap).slice(0, 3));
 
     const ib = parseVisits(ibData, nextStopMap);
     const ob = parseVisits(obData, nextStopMap);
@@ -155,6 +156,7 @@ function parseVisits(data, nextStopMap) {
 
         const vehicleRef = journey?.VehicleRef;
         const nextStop   = nextStopMap[vehicleRef] ?? '';
+        if (!nextStop) console.log('[arrivals] no match for VehicleRef:', vehicleRef);
 
         const mins = Math.max(0, Math.round((arrivalMs - now) / 60000));
         return { mins, arrivalMs, nextStop };
