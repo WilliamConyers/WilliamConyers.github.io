@@ -147,7 +147,9 @@ function renderArrivals(elId, buses) {
   el.innerHTML = buses.map(v => {
     const isNow   = v.mins <= 1;
     const unit    = isNow ? '' : '<span class="arr-unit">min</span>';
-    const nextStop = v.nextStop ? `<span class="arr-dest">${v.nextStop}</span>` : '';
+    const nextStop = v.nextStop
+      ? `<span class="arr-dest"><span class="arr-dest-label">next stop</span>${v.nextStop}</span>`
+      : '';
     return `<div class="arr-row">
       <span class="arr-mins">${isNow ? 'Now' : v.mins}${unit}</span>
       ${nextStop}
