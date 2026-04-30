@@ -101,7 +101,7 @@ async function fetchArrivals() {
 
 /* ── StopMonitoring fetch ── */
 async function fetchStop(apiKey, stopCode) {
-  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&format=json`;
+  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&MaximumNumberOfCalls.Onwards=1&format=json`;
   const res = await fetch(url);
 
   if (!res.ok) {
