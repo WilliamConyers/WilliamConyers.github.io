@@ -145,12 +145,12 @@ function renderArrivals(elId, buses) {
     return;
   }
   el.innerHTML = buses.map(v => {
-    const isNow = v.mins <= 1;
-    const unit  = isNow ? '' : '<span class="arr-unit">min</span>';
-    const dest  = v.dest ? `<span class="arr-dest">to ${v.dest}</span>` : '';
+    const isNow   = v.mins <= 1;
+    const unit    = isNow ? '' : '<span class="arr-unit">min</span>';
+    const nextStop = v.nextStop ? `<span class="arr-dest">${v.nextStop}</span>` : '';
     return `<div class="arr-row">
       <span class="arr-mins">${isNow ? 'Now' : v.mins}${unit}</span>
-      ${dest}
+      ${nextStop}
     </div>`;
   }).join('');
 }
@@ -178,12 +178,12 @@ function parseVehicles(data) {
       const j   = a.MonitoredVehicleJourney;
       const loc = j?.VehicleLocation;
       return {
-        ref:       j?.VehicleRef                   ?? '—',
-        lineRef:   j?.LineRef?.value ?? j?.LineRef ?? '',
+        ref:       j?.VehicleRef                          ?? '—',
+        lineRef:   j?.LineRef?.value ?? j?.LineRef        ?? '',
         lat:       parseFloat(loc?.Latitude),
         lon:       parseFloat(loc?.Longitude),
-        direction: j?.DirectionRef                 ?? '',
-        dest:      j?.DestinationName              ?? '',
+        direction: j?.DirectionRef                        ?? '',
+        nextStop:  j?.MonitoredCall?.StopPointName        ?? '',
       };
     }).filter(v => isFinite(v.lat) && isFinite(v.lon));
   } catch {
