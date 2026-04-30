@@ -1,19 +1,18 @@
 /* ─────────────────────────────────────────────
    arrivals/arrivals.js
    Next three Muni 7 arrivals at Haight & Shrader,
-   inbound (toward downtown) and outbound (toward
-   Ocean Beach). ETAs are estimated from each bus's
-   live GPS position and typical Haight St pace.
+   inbound and outbound.
 
-   API: 511 SF Bay VehicleMonitoring (same key as
-   the bus tracker — shared via localStorage).
+   Uses 511 SF Bay StopMonitoring for real predicted
+   arrival times. Stop codes are discovered once via
+   the stops API and cached in localStorage.
 ───────────────────────────────────────────── */
 
-const ARR_STOP_LAT  = 37.76990;
-const ARR_STOP_LON  = -122.44680;   // Haight St & Shrader St
-const ARR_SPEED_MPS = 3.8;          // ~8.5 mph — typical Haight St pace with stops
-const ARR_REFRESH   = 30000;        // 30 s
+const ARR_LAT       = 37.76990;
+const ARR_LON       = -122.44680;   // Haight St & Shrader St
+const ARR_REFRESH   = 30000;
 const ARR_KEY       = 'sf511ApiKey';
+const ARR_STOPS_KEY = 'arr7StopCodes';  // cached { ib, ob } stop codes
 
 let arrTimer = null;
 
@@ -39,6 +38,7 @@ document.getElementById('arr-refresh').addEventListener('click', fetchArrivals);
 
 document.getElementById('arr-clear-key').addEventListener('click', () => {
   localStorage.removeItem(ARR_KEY);
+  localStorage.removeItem(ARR_STOPS_KEY);
   stopArrTimer();
   document.getElementById('arr-board').style.display = 'none';
   document.getElementById('arr-setup').style.display = '';
@@ -67,77 +67,156 @@ function stopArrTimer() {
   if (arrTimer) { clearInterval(arrTimer); arrTimer = null; }
 }
 
-/* ── Fetch + render ── */
+/* ── Main fetch ── */
 async function fetchArrivals() {
   const apiKey = localStorage.getItem(ARR_KEY);
   if (!apiKey) return;
   setArrStatus('Updating…');
 
   try {
-    const url = `https://api.511.org/transit/VehicleMonitoring?api_key=${apiKey}&agency=SF&format=json`;
-    const res = await fetch(url);
+    const stops = await resolveStopCodes(apiKey);
 
-    if (!res.ok) {
-      setArrStatus(
-        res.status === 401 || res.status === 403
-          ? 'Invalid API key — check your key and try again.'
-          : `API error (${res.status}) — will retry.`,
-        true
-      );
-      return;
-    }
+    const [ibRes, obRes] = await Promise.all([
+      fetchStopMonitoring(apiKey, stops.ib),
+      fetchStopMonitoring(apiKey, stops.ob),
+    ]);
 
-    const data     = await res.json();
-    const vehicles = parseVehicles(data).filter(v => isRoute7(v.lineRef));
-    const ib       = approaching(vehicles, true);
-    const ob       = approaching(vehicles, false);
+    const ib = parseVisits(ibRes);
+    const ob = parseVisits(obRes);
 
     renderArrivals('arr-ib', ib.slice(0, 3));
     renderArrivals('arr-ob', ob.slice(0, 3));
 
     const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    setArrStatus(`Updated ${ts} · ${vehicles.length} buses tracked · ${ib.length} IB / ${ob.length} OB approaching`);
+    setArrStatus(`Updated ${ts} · ${ib.length} IB / ${ob.length} OB approaching`);
 
-  } catch {
-    setArrStatus('Could not reach 511 API — check your connection.', true);
+  } catch (err) {
+    setArrStatus(
+      err.message.startsWith('API key')
+        ? 'Invalid API key — check your key and try again.'
+        : 'Could not reach 511 API — check your connection.',
+      true
+    );
   }
 }
 
 /* ─────────────────────────────────────────────
-   approaching(vehicles, inbound)
-   Filters to buses upstream of the stop and sorts
-   by distance. IB buses travel east (longitude
-   increases / less negative); to be approaching
-   they must still be west of the stop (more
-   negative lon). OB buses travel west; they must
-   be east of the stop.
+   Stop code discovery
+   Queries the 511 stops API for Route 7, finds
+   the two nearest stops to ARR_LAT/ARR_LON, and
+   identifies which is IB vs OB from the direction
+   of the first StopMonitoring response.
 ───────────────────────────────────────────── */
-function approaching(vehicles, inbound) {
-  const buffer = 0.0006; // ~53 m grace past the stop before we drop a bus
+async function resolveStopCodes(apiKey) {
+  const cached = localStorage.getItem(ARR_STOPS_KEY);
+  if (cached) {
+    try {
+      const p = JSON.parse(cached);
+      if (p.ib && p.ob) return p;
+    } catch {}
+  }
 
-  return vehicles
-    .filter(v => {
-      const d = (v.direction || '').toLowerCase();
-      return inbound ? d.startsWith('i') : d.startsWith('o');
-    })
-    .filter(v => {
-      // Longitude gate only — route 7 crosses multiple streets at different
-      // latitudes (Noriega, Lincoln, Haight) so a lat filter misses most buses.
-      return inbound
-        ? v.lon < ARR_STOP_LON + buffer   // west of stop → IB approaching
-        : v.lon > ARR_STOP_LON - buffer;  // east of stop → OB approaching
-    })
-    .map(v => ({
-      ...v,
-      distM: haversineM(ARR_STOP_LAT, ARR_STOP_LON, v.lat, v.lon),
-    }))
-    .map(v => ({
-      ...v,
-      mins: Math.max(0, Math.round(v.distM / ARR_SPEED_MPS / 60)),
-    }))
-    .sort((a, b) => a.distM - b.distM);
+  setArrStatus('Finding nearby stops…');
+  const codes = await discoverStopCodes(apiKey);
+  localStorage.setItem(ARR_STOPS_KEY, JSON.stringify(codes));
+  return codes;
 }
 
+async function discoverStopCodes(apiKey) {
+  const url = `https://api.511.org/transit/stops?api_key=${apiKey}&agency=SF&route_id=7&format=json`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) throw new Error('API key invalid');
+    throw new Error(`Stops API error ${res.status}`);
+  }
+
+  const data = await res.json();
+  const stops = extractStopList(data);
+
+  if (!stops.length) throw new Error('No stops returned from API');
+
+  // Sort by distance to our target coordinates
+  const sorted = stops
+    .map(s => ({ ...s, dist: haversineM(ARR_LAT, ARR_LON, s.lat, s.lon) }))
+    .filter(s => isFinite(s.dist))
+    .sort((a, b) => a.dist - b.dist);
+
+  // The two nearest stops are the IB and OB stops at (or near) the intersection.
+  // They sit on opposite sides of Haight St, so one is slightly north and one south.
+  // Eastbound (IB) stops are on the south side of the street (lower latitude).
+  const pair = sorted.slice(0, 2);
+  if (pair.length < 2) throw new Error('Could not find a stop pair');
+
+  const [a, b] = pair.sort((x, y) => x.lat - y.lat); // a = more southern
+  return { ib: a.id, ob: b.id };
+}
+
+function extractStopList(data) {
+  // Handle the several JSON shapes the 511 API returns
+  let raw = data;
+
+  // Unwrap SIRI-style envelope if present
+  if (raw?.Contents?.dataObjects?.ScheduledStopPoint) {
+    raw = raw.Contents.dataObjects.ScheduledStopPoint;
+  } else if (raw?.body) {
+    raw = raw.body;
+  }
+
+  if (!Array.isArray(raw)) return [];
+
+  return raw.map(s => {
+    const id  = String(s.id ?? s.stop_id ?? s.Id ?? '').replace(/^[^:]+:/, '');
+    const lat = parseFloat(s.lat ?? s.stop_lat ?? s.Latitude  ?? s.Location?.Latitude);
+    const lon = parseFloat(s.lon ?? s.stop_lon ?? s.Longitude ?? s.Location?.Longitude);
+    return { id, lat, lon };
+  }).filter(s => s.id && isFinite(s.lat) && isFinite(s.lon));
+}
+
+/* ── StopMonitoring fetch ── */
+async function fetchStopMonitoring(apiKey, stopCode) {
+  const url = `https://api.511.org/transit/StopMonitoring?api_key=${apiKey}&agency=SF&stopCode=${stopCode}&LineRef=7&MaximumNumberOfCalls.Onwards=1&format=json`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) throw new Error('API key invalid');
+    throw new Error(`StopMonitoring error ${res.status}`);
+  }
+  return res.json();
+}
+
+/* ── Parse StopMonitoring response ── */
+function parseVisits(data) {
+  try {
+    const delivery  = data?.Siri?.ServiceDelivery?.StopMonitoringDelivery;
+    const container = Array.isArray(delivery) ? delivery[0] : delivery;
+    const visits    = container?.MonitoredStopVisit ?? [];
+    const now       = Date.now();
+
+    return visits
+      .map(v => {
+        const journey  = v?.MonitoredVehicleJourney;
+        const call     = journey?.MonitoredCall;
+        const timeStr  = call?.ExpectedArrivalTime || call?.AimedArrivalTime;
+        if (!timeStr) return null;
+
+        const arrivalMs = new Date(timeStr).getTime();
+        if (isNaN(arrivalMs)) return null;
+
+        // Next stop after ours, from OnwardCalls
+        const onward   = journey?.OnwardCalls?.OnwardCall;
+        const nextRaw  = Array.isArray(onward) ? onward[0]?.StopPointName : onward?.StopPointName;
+        const nextStop = extractName(nextRaw);
+
+        const mins = Math.max(0, Math.round((arrivalMs - now) / 60000));
+        return { mins, arrivalMs, nextStop };
+      })
+      .filter(v => v !== null && v.arrivalMs >= now - 60000)
+      .sort((a, b) => a.arrivalMs - b.arrivalMs);
+  } catch {
+    return [];
+  }
+}
+
+/* ── Render ── */
 function renderArrivals(elId, buses) {
   const el = document.getElementById(elId);
   if (!buses.length) {
@@ -145,8 +224,8 @@ function renderArrivals(elId, buses) {
     return;
   }
   el.innerHTML = buses.map(v => {
-    const isNow   = v.mins <= 1;
-    const unit    = isNow ? '' : '<span class="arr-unit">min</span>';
+    const isNow    = v.mins <= 1;
+    const unit     = isNow ? '' : '<span class="arr-unit">min</span>';
     const nextStop = v.nextStop
       ? `<span class="arr-dest"><span class="arr-dest-label">next stop</span>${v.nextStop}</span>`
       : '';
@@ -172,34 +251,6 @@ function haversineM(lat1, lon1, lat2, lon2) {
   const dl   = (lon2 - lon1) * Math.PI / 180;
   const a    = Math.sin(dp / 2) ** 2 + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dl / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function isRoute7(lineRef) {
-  return String(lineRef ?? '').replace(/^[^:]+:/, '') === '7';
-}
-
-function parseVehicles(data) {
-  try {
-    const delivery   = data?.Siri?.ServiceDelivery?.VehicleMonitoringDelivery;
-    const container  = Array.isArray(delivery) ? delivery[0] : delivery;
-    const activities = container?.VehicleActivity ?? [];
-    return activities.map(a => {
-      const j   = a.MonitoredVehicleJourney;
-      const loc = j?.VehicleLocation;
-      return {
-        ref:       j?.VehicleRef                          ?? '—',
-        lineRef:   j?.LineRef?.value ?? j?.LineRef        ?? '',
-        lat:       parseFloat(loc?.Latitude),
-        lon:       parseFloat(loc?.Longitude),
-        direction: j?.DirectionRef                        ?? '',
-        nextStop:  extractName(j?.MonitoredCall?.StopPointName)
-                || extractName(j?.DestinationName)
-                || '',
-      };
-    }).filter(v => isFinite(v.lat) && isFinite(v.lon));
-  } catch {
-    return [];
-  }
 }
 
 function setArrStatus(msg, isError = false) {
