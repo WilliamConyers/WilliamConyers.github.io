@@ -124,8 +124,6 @@ function parseVisits(data) {
     const visits    = container?.MonitoredStopVisit ?? [];
     const now       = Date.now();
 
-    if (visits.length) console.log('[arrivals] first journey:', JSON.stringify(visits[0]?.MonitoredVehicleJourney, null, 2));
-
     return visits
       .map(v => {
         const journey = v?.MonitoredVehicleJourney;
@@ -139,13 +137,11 @@ function parseVisits(data) {
         const arrivalMs = new Date(timeStr).getTime();
         if (isNaN(arrivalMs)) return null;
 
-        // Next stop after ours, from OnwardCalls (if returned by API)
-        const onward   = journey?.OnwardCalls?.OnwardCall;
-        const nextRaw  = Array.isArray(onward) ? onward[0]?.StopPointName : onward?.StopPointName;
-        const nextStop = extractName(nextRaw);
+        // DestinationDisplay is the short terminus label ("Transit Center", "Ocean Beach")
+        const dest = extractName(call?.DestinationDisplay) || extractName(journey?.DestinationName);
 
         const mins = Math.max(0, Math.round((arrivalMs - now) / 60000));
-        return { mins, arrivalMs, nextStop };
+        return { mins, arrivalMs, dest };
       })
       .filter(v => v !== null && v.arrivalMs >= now - 60000)
       .sort((a, b) => a.arrivalMs - b.arrivalMs);
@@ -164,8 +160,8 @@ function renderArrivals(elId, buses) {
   el.innerHTML = buses.map(v => {
     const isNow    = v.mins <= 1;
     const unit     = isNow ? '' : '<span class="arr-unit">min</span>';
-    const nextStop = v.nextStop
-      ? `<span class="arr-dest"><span class="arr-dest-label">next stop</span>${v.nextStop}</span>`
+    const nextStop = v.dest
+      ? `<span class="arr-dest"><span class="arr-dest-label">to</span>${v.dest}</span>`
       : '';
     return `<div class="arr-row">
       <span class="arr-mins">${isNow ? 'Now' : v.mins}${unit}</span>
