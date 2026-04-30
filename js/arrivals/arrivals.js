@@ -117,7 +117,9 @@ async function fetchStop(apiKey, stopCode) {
 /* ── Parse StopMonitoring visits ── */
 function parseVisits(data) {
   try {
-    const delivery  = data?.Siri?.ServiceDelivery?.StopMonitoringDelivery;
+    // 511 wraps in Siri on some endpoints, not others
+    const svc       = data?.Siri?.ServiceDelivery ?? data?.ServiceDelivery ?? data;
+    const delivery  = svc?.StopMonitoringDelivery;
     const container = Array.isArray(delivery) ? delivery[0] : delivery;
     const visits    = container?.MonitoredStopVisit ?? [];
     const now       = Date.now();
@@ -179,7 +181,9 @@ function extractName(field) {
 }
 
 function isRoute7(lineRef) {
-  return String(lineRef ?? '').replace(/^[^:]+:/, '') === '7';
+  // LineRef can be "7", "SF:7", "7-Haight/Noriega", {value:"SF:7"}, etc.
+  const s = String(lineRef?.value ?? lineRef ?? '').replace(/^[^:]+:/, '');
+  return s === '7' || s.startsWith('7-') || s.startsWith('7 ');
 }
 
 function setArrStatus(msg, isError = false) {
