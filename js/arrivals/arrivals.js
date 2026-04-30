@@ -124,6 +124,8 @@ function parseVisits(data) {
     const visits    = container?.MonitoredStopVisit ?? [];
     const now       = Date.now();
 
+    if (visits.length) console.log('[arrivals] first journey:', JSON.stringify(visits[0]?.MonitoredVehicleJourney, null, 2));
+
     return visits
       .map(v => {
         const journey = v?.MonitoredVehicleJourney;
