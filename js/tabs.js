@@ -16,7 +16,13 @@ function showPanel(id) {
   if (panel) panel.classList.add('active');
 
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  const activeLink = document.querySelector('.nav-link[data-section="' + id + '"]');
+  // Exact match first; if on a sub-page, activate the parent section's nav link
+  // by reading the back button's target (e.g. fantasy-post-1 → fantasy).
+  let activeLink = document.querySelector('.nav-link[data-section="' + id + '"]');
+  if (!activeLink) {
+    const backBtn = panel?.querySelector('.back-btn[data-section]');
+    if (backBtn) activeLink = document.querySelector('.nav-link[data-section="' + backBtn.dataset.section + '"]');
+  }
   if (activeLink) activeLink.classList.add('active');
 
   location.hash = id;
