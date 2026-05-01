@@ -89,6 +89,18 @@
   margin-top: 4px;
 }
 
+/* ── California poppy doodle ── */
+#panel-landing { position: relative; }
+
+.poppy-doodle {
+  position: absolute;
+  bottom: 52px;
+  right: 0;
+  width: 72px;
+  height: 158px;
+  pointer-events: none;
+}
+
 /* ── Landing footer (social icon buttons) ── */
 .landing-footer {
   position: fixed;
@@ -114,4 +126,5 @@
   .section-tiles  { grid-template-columns: 1fr; gap: 10px; }
   .section-tile   { min-height: unset; }
   .landing-footer { left: 20px; bottom: 20px; }
+  .poppy-doodle   { display: none; }
 }
