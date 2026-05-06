@@ -37,7 +37,7 @@
 
 .section-tile {
   border-radius: 8px;
-  padding: 24px 20px 22px;
+  padding: 24px 20px 48px;
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -49,30 +49,20 @@
   overflow: hidden;
 }
 
-/* ── Data tile: expands + chart draws itself on hover ── */
-.tile-data {
-  transition: opacity 0.15s, padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tile-data:hover {
-  padding-bottom: 88px;
-}
-
+/* ── Data tile: chart draws itself on hover ── */
 .chart-doodle {
   position: absolute;
   bottom: 14px;
-  left: 16px;
-  right: 16px;
-  width: auto;
-  height: 62px;
+  right: 14px;
+  width: 108px;
+  height: 64px;
   pointer-events: none;
 }
 
 .chart-line {
   stroke-dasharray: 118;
   stroke-dashoffset: 118;
-  /* slight delay so the tile finishes expanding before the line draws */
-  transition: stroke-dashoffset 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chart-dot {
@@ -86,7 +76,7 @@
 
 .tile-data:hover .chart-dot {
   opacity: 1;
-  transition: opacity 0.2s ease 1s;
+  transition: opacity 0.2s ease 0.75s;
 }
 .section-tile:hover { opacity: 0.88; text-decoration: none; }
 
