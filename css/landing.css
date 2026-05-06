@@ -45,6 +45,38 @@
   min-height: 190px;
   transition: opacity 0.15s;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Data tile: chart-draws-itself on hover ── */
+.chart-doodle {
+  position: absolute;
+  bottom: 16px;
+  right: 14px;
+  width: 86px;
+  height: 50px;
+  pointer-events: none;
+}
+
+.chart-line {
+  stroke-dasharray: 118;
+  stroke-dashoffset: 118;
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-dot {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tile-data:hover .chart-line {
+  stroke-dashoffset: 0;
+}
+
+.tile-data:hover .chart-dot {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.78s;
 }
 .section-tile:hover { opacity: 0.88; text-decoration: none; }
 
