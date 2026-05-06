@@ -5,7 +5,6 @@
 ───────────────────────────────────────────── */
 
 :root {
-  --font-display: "Cormorant Garamond", "Cormorant", Georgia, serif;
   --color-cream:         #F7F0DE;
   --color-cream-tint:    rgba(70, 95, 105, 0.04);
   --color-slate:         #46606A;
@@ -37,8 +36,6 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-
-h1, h2, h3 { font-family: var(--font-display); }
 
 p { color: var(--color-ink-muted); }
 

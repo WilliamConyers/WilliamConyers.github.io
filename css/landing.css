@@ -49,20 +49,30 @@
   overflow: hidden;
 }
 
-/* ── Data tile: chart-draws-itself on hover ── */
+/* ── Data tile: expands + chart draws itself on hover ── */
+.tile-data {
+  transition: opacity 0.15s, padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tile-data:hover {
+  padding-bottom: 88px;
+}
+
 .chart-doodle {
   position: absolute;
-  bottom: 16px;
-  right: 14px;
-  width: 86px;
-  height: 50px;
+  bottom: 14px;
+  left: 16px;
+  right: 16px;
+  width: auto;
+  height: 62px;
   pointer-events: none;
 }
 
 .chart-line {
   stroke-dasharray: 118;
   stroke-dashoffset: 118;
-  transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  /* slight delay so the tile finishes expanding before the line draws */
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
 }
 
 .chart-dot {
@@ -76,7 +86,7 @@
 
 .tile-data:hover .chart-dot {
   opacity: 1;
-  transition: opacity 0.2s ease 0.78s;
+  transition: opacity 0.2s ease 1s;
 }
 .section-tile:hover { opacity: 0.88; text-decoration: none; }
 
