@@ -57,6 +57,12 @@
   width: 108px;
   height: 64px;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tile-data:hover .chart-doodle {
+  opacity: 1;
 }
 
 .chart-line {
