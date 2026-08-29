@@ -40,6 +40,7 @@ function showPanel(id) {
   // Start live tools when navigating to their panel
   if (id === 'arrivals' && typeof startArrBoard === 'function') startArrBoard();
   if (id === 'buses' && localStorage.getItem('sf511ApiKey') && typeof showTracker === 'function') showTracker();
+  if (id === 'yoga' && typeof initYoga === 'function') initYoga();
 }
 
 document.querySelectorAll('[data-section]').forEach(el => {
