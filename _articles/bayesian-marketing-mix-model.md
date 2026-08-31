@@ -1,5 +1,11 @@
-# Optimizing Marketing Spend with a Bayesian Marketing Mix Model
-
+---
+title: Optimizing Marketing Spend with a Bayesian Marketing Mix Model
+section: data
+date: 2026-08-29
+permalink: /data-science/bayesian-marketing-mix-model/
+teaser: "A simulated six-channel MMM built in PyMC — validated against known ground truth, including where its LinkedIn estimate got attribution wrong."
+description: "A Bayesian Marketing Mix Model built in PyMC to optimize spend across six marketing channels, using a simulated dataset with known ground-truth parameters."
+---
 *A note on the data: this project uses a simulated dataset I built with known ground-truth parameters across all six channels, and the client is invented.*
 
 ## The Problem
@@ -26,19 +32,19 @@ The total budget is unchanged. This is a reallocation, not a spend increase.
 
 The model estimates the reallocation would take marketing-driven new accounts from **104.0 to 109.7 per week**, a gain of **5.7** with a 94% credible interval of 2.1 to 9.3. That is a reasonably wide range, but the evidence that the reallocation increases new accounts is strong. It works out to roughly a 5% lift on the marketing-driven portion of new accounts at no additional cost.
 
-Two of these moves are large enough to be worth naming directly. Cutting Hulu by 76% and Paid Search by 48% is what the optimizer recommends on this metric, but both are the kind of change I would phase in over a quarter or two and monitor, rather than execute in one step. I also name later additional steps I recomend validate the resutls on this model. 
+Two of these moves are large enough to be worth naming directly. Cutting Hulu by 76% and Paid Search by 48% is what the optimizer recommends on this metric, but both are the kind of change I would phase in over a quarter or two and monitor, rather than execute in one step. I also name additional steps below that I recommend to validate the results of this model.
 
 ### How much to trust these numbers
 
 The model was evaluated on a holdout of the final six months of data. In-sample R² was 0.90, out-of-sample R² was 0.70, and average prediction error in the holdout period was 2.4%. In plain terms: the model explains the large majority of week-to-week variation in new accounts, and when asked to predict a six-month stretch it had never seen, it was off by less than three percent on average. The gap between the train and test R² is partly a function of higher overall account volumes in the final year, which compresses the variance the model gets credit for explaining.
 
-![Figure 1 — actual vs. predicted new accounts with train/test split](../images/data-post-2/actual-vs-predicted.png)
+![Figure 1 — actual vs. predicted new accounts with train/test split](/images/data-post-2/actual-vs-predicted.png)
 
 **Figure 1.** Weekly new accounts, actual versus model prediction, with 94% credible intervals.
 
 ## Key Findings
 
-**Marketing drove 41% of new accounts between 2022 and 2025** — 17,135 of 41,404. The remaining 59% is what the model attributes to the base and trend terms: organic inbound, referrals, and accounts sourced directly by sales. 
+**Marketing drove 41% of new accounts between 2022 and 2025** — 17,135 of 41,404. The remaining 59% is what the model attributes to the base and trend terms: organic inbound, referrals, and accounts sourced directly by sales.
 
 **The clearest way to compare channels is to ask how far an additional $1,000 would go in each one.** On a channel like LinkedIn, which has a solid marginal ROI and saturates slowly, the model predicts an additional $1,000 translates to 0.62 new accounts on average. On an oversaturated channel like Hulu, that same $1,000 is only expected to translate to 0.19.
 
@@ -69,10 +75,9 @@ The model was built using PyMC, a Python library for fitting Bayesian regression
 
 On top of these, the model estimates a base level of new accounts that would occur without any marketing, as well as an underlying growth trend.
 
-The Bayesian approach matters here because it pairs well-informed prior knowledge about channel performance with real-world data. 
+The Bayesian approach matters here because it pairs well-informed prior knowledge about channel performance with real-world data.
 
 I began with broad priors and refined them through a combination of industry research, residual analysis, and saturation curve review. One notable challenge was that LinkedIn spend grew in parallel with overall business growth, which created a risk of the model over-attributing trend-driven growth to LinkedIn. I worked to address this through prior constraints, but before recommending we implement these changes, I would pursue further validation.
-
 
 ## Limitations and Next Steps
 

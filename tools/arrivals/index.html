@@ -1,0 +1,51 @@
+---
+layout: default
+title: Next 7 at Haight & Shrader
+description: Next three inbound and outbound arrivals at the Shrader–Stanyan stop with estimated minutes to arrival.
+nav_section: tools
+extra_css:
+  - /css/bus.css
+  - /css/arrivals.css
+extra_js:
+  - /js/arrivals/arrivals.js
+inline_js: |
+  if (typeof startArrBoard === 'function') startArrBoard();
+---
+<header class="section-header">
+  <a class="back-btn" href="/tools/">← Small Useful Things</a>
+  <span class="section-eyebrow eyebrow-tools">TOOLS</span>
+  <h1 class="section-heading">Next 7 at Haight & Shrader</h1>
+</header>
+
+<div id="arr-setup" class="bus-setup">
+  <p>Uses the same free 511 SF Bay API key as the bus tracker.</p>
+  <p>Get a key at <a href="https://511.org/open-data/token" target="_blank">511.org/open-data/token</a>, then paste it below.</p>
+  <div class="bus-setup-row">
+    <input type="text" id="arr-key-input" placeholder="Paste your 511 API key…" autocomplete="off">
+    <button id="arr-key-save" class="bus-btn">Check arrivals</button>
+  </div>
+</div>
+
+<div id="arr-board" style="display:none">
+  <div class="arr-toolbar">
+    <span id="arr-status" class="arr-status"></span>
+    <button id="arr-refresh" class="bus-btn">↺ Refresh</button>
+    <button id="arr-clear-key" class="bus-btn bus-btn-ghost">Change key</button>
+  </div>
+  <div class="arr-columns">
+    <div class="arr-col arr-col-ib">
+      <div class="arr-col-header">
+        <span class="arr-direction">Inbound</span>
+        <span class="arr-direction-sub">toward downtown</span>
+      </div>
+      <div id="arr-ib"></div>
+    </div>
+    <div class="arr-col arr-col-ob">
+      <div class="arr-col-header">
+        <span class="arr-direction">Outbound</span>
+        <span class="arr-direction-sub">toward Ocean Beach</span>
+      </div>
+      <div id="arr-ob"></div>
+    </div>
+  </div>
+</div>

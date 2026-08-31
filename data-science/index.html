@@ -1,0 +1,23 @@
+---
+layout: default
+title: Data Science Projects
+description: Data science and machine learning projects by William Conyers.
+nav_section: data
+---
+<header class="section-header">
+  <a class="back-btn" href="/">← Home</a>
+  <span class="section-eyebrow eyebrow-data">DATA SCIENCE</span>
+  <h1 class="section-heading">Data Science Projects</h1>
+</header>
+
+<div class="section-grid">
+  {% assign items = site.articles | where: "section", "data" | sort: "date" | reverse %}
+  {% for item in items %}
+  <a class="section-tile tile-data" href="{{ item.url }}">
+    <span class="tile-eyebrow">{{ item.date | date: "%b %Y" | upcase }}</span>
+    <h2 class="tile-title">{{ item.title }}</h2>
+    <p class="tile-teaser">{{ item.teaser }}</p>
+    <span class="tile-arrow">Read →</span>
+  </a>
+  {% endfor %}
+</div>

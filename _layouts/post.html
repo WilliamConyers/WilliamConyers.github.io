@@ -1,0 +1,22 @@
+---
+layout: default
+---
+{% if page.section == "fantasy" %}
+  {% assign back_url = "/fantasy/" %}
+  {% assign back_label = "Thinking about Fantasy Stories" %}
+  {% assign eyebrow_text = "FANTASY" %}
+{% elsif page.section == "data" %}
+  {% assign back_url = "/data-science/" %}
+  {% assign back_label = "Data Science Projects" %}
+  {% assign eyebrow_text = "DATA SCIENCE" %}
+{% endif %}
+
+<header class="section-header">
+  <a class="back-btn" href="{{ back_url }}">← {{ back_label }}</a>
+  <span class="section-eyebrow eyebrow-{{ page.section }}">{{ eyebrow_text }}</span>
+  <h1 class="section-heading">{{ page.title }}</h1>
+</header>
+<p class="post-meta">{{ page.date | date: "%B %Y" }}</p>
+<div class="post-body">
+  {{ content }}
+</div>

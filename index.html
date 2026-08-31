@@ -1,653 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>William Conyers</title>
-
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/landing.css">
-  <link rel="stylesheet" href="css/tools.css">
-  <link rel="stylesheet" href="css/tiles.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/calculator.css">
-  <link rel="stylesheet" href="css/bus.css">
-  <link rel="stylesheet" href="css/arrivals.css">
-  <link rel="stylesheet" href="css/yoga.css">
-
-  <!-- Leaflet (bus tracker) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Chart.js (calculator) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-  <!-- ── Navigation ── -->
-  <nav class="site-nav">
-    <a class="nav-brand" href="#" data-section="landing">William Conyers</a>
-    <div class="nav-links">
-      <a class="nav-link" href="#" data-section="fantasy">Thinking about Fantasy Stories</a>
-      <a class="nav-link" href="#" data-section="data">Data Science Projects</a>
-      <a class="nav-link" href="#" data-section="tools">Small Useful Things</a>
-    </div>
-  </nav>
-
-  <main class="site-main">
-
-    <!-- ── Landing ────────────────────────────── -->
-    <section class="section-panel active" id="panel-landing">
-
-      <div class="landing-hero">
-        <h1 class="hero-name">William Conyers</h1>
-        <p class="hero-statement">This website is a creative space. Some days I'm here to build with AI and some days to exile technology and prove to myself I can still think big original thoughts.</p>
-      </div>
-
-      <div class="section-tiles">
-        <a class="section-tile tile-fantasy" href="#" data-section="fantasy">
-          <span class="tile-eyebrow">FANTASY</span>
-          <h2 class="tile-title">Thinking about Fantasy Stories</h2>
-          <p class="tile-teaser">Spending time with stories I love and working through what they mean to me</p>
-          <span class="tile-arrow">Explore →</span>
-          <svg class="hiker-doodle" viewBox="0 0 140 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <!-- Trail hiker: left leg forward, slightly smaller, receding depth -->
-            <g class="hiker-trail">
-              <rect x="57" y="24" width="6" height="9" rx="2"
-                    fill="rgba(247,240,222,0.08)" stroke="rgba(247,240,222,0.28)" stroke-width="1.1"/>
-              <circle cx="63" cy="18" r="4.3"
-                      fill="none" stroke="rgba(247,240,222,0.55)" stroke-width="1.4"/>
-              <line x1="63"  y1="22.3" x2="61.5" y2="34"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="61.5" y1="34"  x2="67"   y2="46"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="61.5" y1="34"  x2="56"   y2="46"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="62"  y1="27"   x2="57.5" y2="32.5" stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
-              <line x1="62"  y1="27"   x2="66.5" y2="33"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
-            </g>
-            <!-- Lead hiker: right leg forward, bolder, trekking pole -->
-            <g class="hiker-lead">
-              <rect x="98" y="22" width="8" height="11" rx="2.5"
-                    fill="rgba(247,240,222,0.1)" stroke="rgba(247,240,222,0.42)" stroke-width="1.2"/>
-              <circle cx="106" cy="15" r="5.2"
-                      fill="none" stroke="rgba(247,240,222,0.8)" stroke-width="1.6"/>
-              <line x1="106" y1="20.2" x2="104" y2="33"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
-              <line x1="104" y1="33"   x2="111" y2="46"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
-              <line x1="104" y1="33"   x2="98"  y2="46"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
-              <line x1="105" y1="25"   x2="99"  y2="32"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
-              <line x1="105" y1="25"   x2="110" y2="30"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
-              <line x1="110" y1="30"   x2="113" y2="46"   stroke="rgba(247,240,222,0.48)" stroke-width="1.1" stroke-linecap="round"/>
-            </g>
-          </svg>
-        </a>
-        <a class="section-tile tile-data" href="#" data-section="data">
-          <span class="tile-eyebrow">DATA SCIENCE</span>
-          <h2 class="tile-title">Data Science Projects</h2>
-          <p class="tile-teaser">Building technical skills and preparing for professional pursuits</p>
-          <span class="tile-arrow">Explore →</span>
-          <svg class="chart-doodle" viewBox="0 0 90 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <line x1="4" y1="47" x2="86" y2="47" stroke="rgba(247,240,222,0.18)" stroke-width="0.8"/>
-            <polyline class="chart-line"
-              points="4,43 20,35 33,39 50,20 64,25 86,5"
-              fill="none" stroke="rgba(247,240,222,0.65)" stroke-width="1.5"
-              stroke-linecap="round" stroke-linejoin="round"/>
-            <circle class="chart-dot" cx="4"  cy="43" r="1.8" fill="rgba(247,240,222,0.75)"/>
-            <circle class="chart-dot" cx="20" cy="35" r="1.8" fill="rgba(247,240,222,0.75)"/>
-            <circle class="chart-dot" cx="33" cy="39" r="1.8" fill="rgba(247,240,222,0.75)"/>
-            <circle class="chart-dot" cx="50" cy="20" r="1.8" fill="rgba(247,240,222,0.75)"/>
-            <circle class="chart-dot" cx="64" cy="25" r="1.8" fill="rgba(247,240,222,0.75)"/>
-            <circle class="chart-dot" cx="86" cy="5"  r="1.8" fill="rgba(247,240,222,0.75)"/>
-          </svg>
-        </a>
-        <a class="section-tile tile-tools" href="#" data-section="tools">
-          <span class="tile-eyebrow">TOOLS</span>
-          <h2 class="tile-title">Small Useful Things</h2>
-          <p class="tile-teaser">Simple products that make my life just a little smoother</p>
-          <span class="tile-arrow">Explore →</span>
-        </a>
-      </div>
-
-    </section>
-
-    <!-- ── Considering Fantasy Stories ───────── -->
-    <section class="section-panel" id="panel-fantasy">
-      <header class="section-header">
-        <button class="back-btn" data-section="landing">← Home</button>
-        <span class="section-eyebrow eyebrow-fantasy">FANTASY</span>
-        <h1 class="section-heading">Considering Fantasy Stories</h1>
-      </header>
-
-      <div class="section-grid">
-        <a class="section-tile tile-fantasy" href="#" data-section="fantasy-post-1">
-          <span class="tile-eyebrow">APR 2026</span>
-          <h2 class="tile-title">The Chosen One Problem</h2>
-          <p class="tile-teaser">Blog posts will sit here — this is just a placeholder.</p>
-          <span class="tile-arrow">Read →</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ── Fantasy post: The Chosen One Problem ── -->
-    <section class="section-panel" id="panel-fantasy-post-1">
-      <header class="section-header">
-        <button class="back-btn" data-section="fantasy">← Thinking about Fantasy Stories</button>
-        <span class="section-eyebrow eyebrow-fantasy">FANTASY</span>
-        <h1 class="section-heading">The Chosen One Problem</h1>
-      </header>
-      <p class="post-meta">April 2026</p>
-      <div class="post-body">
-        <p>The test will go here when I have a post. More examples below.</p>
-        <h2>Why it persists</h2>
-        <p>The trope persists because it solves a real problem cheaply. Fantasy worlds are enormous and the reader needs a reason to care about them. Attaching that world's fate to one person creates stakes instantly. The problem is that stakes and investment are not the same thing. I can understand that the world will end and still not care who saves it.</p>
-        <p>The writers who solve this — Le Guin, Tolkien at his best, Robin Hobb consistently — solve it by making the chosen one's inner life more interesting than their destiny. The external plot is a container. What fills it is a person who would be worth reading about even in a world with no prophecy, no darkness rising, no sword in any stone. That is the harder thing to write. It is also the only thing worth reading.</p>
-      </div>
-    </section>
-
-    <!-- ── Data Science Projects ──────────────── -->
-    <section class="section-panel" id="panel-data">
-      <header class="section-header">
-        <button class="back-btn" data-section="landing">← Home</button>
-        <span class="section-eyebrow eyebrow-data">DATA SCIENCE</span>
-        <h1 class="section-heading">Data Science Projects</h1>
-      </header>
-
-      <div class="section-grid">
-        <a class="section-tile tile-data" href="#" data-section="data-post-2">
-          <span class="tile-eyebrow">AUG 2026</span>
-          <h2 class="tile-title">Optimizing Marketing Spend with a Bayesian Marketing Mix Model</h2>
-          <p class="tile-teaser">A simulated six-channel MMM built in PyMC — validated against known ground truth, including where its LinkedIn estimate got attribution wrong.</p>
-          <span class="tile-arrow">Read →</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ── Data post: Bayesian Marketing Mix Model ─ -->
-    <section class="section-panel" id="panel-data-post-2">
-      <header class="section-header">
-        <button class="back-btn" data-section="data">← Data Science Projects</button>
-        <span class="section-eyebrow eyebrow-data">DATA SCIENCE</span>
-        <h1 class="section-heading">Optimizing Marketing Spend with a Bayesian Marketing Mix Model</h1>
-      </header>
-      <p class="post-meta">August 2026</p>
-      <div class="post-body">
-
-        <p><em>A note on the data: this project uses a simulated dataset I built with known ground-truth parameters across all six channels, and the client is invented.</em></p>
-
-        <h2>The Problem</h2>
-        <p>A mid-sized corporate credit card issuer wants to optimize marketing spend across the six channels it currently runs. Using weekly spend data from 2022 to 2025, I built a Bayesian Marketing Mix Model to estimate the effectiveness of each channel and make a recommendation for 2026 budget allocation.</p>
-        <p>The six channels are Hulu streaming ads, Meta (Instagram), LinkedIn, Google paid search, influencers, and email. Total spend runs about $94,000 per week, or roughly $4.9M annualized. The key metric I am optimizing for is new accounts.</p>
-
-        <h2>The Recommendation</h2>
-        <p><strong>Scale spending on LinkedIn, Meta, Influencer, and Email, and reallocate that budget away from Hulu and Paid Search.</strong></p>
-
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Channel</th><th>2025 weekly spend</th><th>Proposed 2026 weekly spend</th><th>Change</th></tr></thead>
-            <tbody>
-              <tr><td>Email</td><td>$2,885</td><td>$6,092</td><td>+$3,208 (+111%)</td></tr>
-              <tr><td>Meta</td><td>$7,692</td><td>$10,664</td><td>+$2,972 (+39%)</td></tr>
-              <tr><td>Influencer</td><td>$14,423</td><td>$19,597</td><td>+$5,174 (+36%)</td></tr>
-              <tr><td>LinkedIn</td><td>$34,615</td><td>$45,360</td><td>+$10,745 (+31%)</td></tr>
-              <tr><td>Paid Search</td><td>$15,385</td><td>$7,939</td><td>−$7,445 (−48%)</td></tr>
-              <tr><td>Hulu Streaming</td><td>$19,231</td><td>$4,578</td><td>−$14,653 (−76%)</td></tr>
-              <tr class="table-total"><td>Total</td><td>$94,231</td><td>$94,231</td><td>flat</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p>The total budget is unchanged. This is a reallocation, not a spend increase.</p>
-
-        <p>The model estimates the reallocation would take marketing-driven new accounts from <strong>104.0 to 109.7 per week</strong>, a gain of <strong>5.7</strong> with a 94% credible interval of 2.1 to 9.3. That is a reasonably wide range, but the evidence that the reallocation increases new accounts is strong. It works out to roughly a 5% lift on the marketing-driven portion of new accounts at no additional cost.</p>
-
-        <p>Two of these moves are large enough to be worth naming directly. Cutting Hulu by 76% and Paid Search by 48% is what the optimizer recommends on this metric, but both are the kind of change I would phase in over a quarter or two and monitor, rather than execute in one step. I also name additional steps below that I recommend to validate the results of this model.</p>
-
-        <h3>How much to trust these numbers</h3>
-        <p>The model was evaluated on a holdout of the final six months of data. In-sample R² was 0.90, out-of-sample R² was 0.70, and average prediction error in the holdout period was 2.4%. In plain terms: the model explains the large majority of week-to-week variation in new accounts, and when asked to predict a six-month stretch it had never seen, it was off by less than three percent on average. The gap between the train and test R² is partly a function of higher overall account volumes in the final year, which compresses the variance the model gets credit for explaining.</p>
-
-        <figure class="post-figure">
-          <img src="images/data-post-2/actual-vs-predicted.png" alt="Weekly new accounts, actual vs. model-predicted, with train/test split and 94% credible intervals" loading="lazy">
-          <figcaption class="figure-caption"><strong>Figure 1.</strong> Weekly new accounts, actual versus model prediction, with 94% credible intervals.</figcaption>
-        </figure>
-
-        <h2>Key Findings</h2>
-        <p><strong>Marketing drove 41% of new accounts between 2022 and 2025</strong> — 17,135 of 41,404. The remaining 59% is what the model attributes to the base and trend terms: organic inbound, referrals, and accounts sourced directly by sales.</p>
-
-        <p><strong>The clearest way to compare channels is to ask how far an additional $1,000 would go in each one.</strong> On a channel like LinkedIn, which has a solid marginal ROI and saturates slowly, the model predicts an additional $1,000 translates to 0.62 new accounts on average. On an oversaturated channel like Hulu, that same $1,000 is only expected to translate to 0.19.</p>
-
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Channel</th><th>2025 avg spend</th><th>Saturation @ 2025</th><th>Accounts per +$1k</th><th>Accounts per +$15k</th></tr></thead>
-            <tbody>
-              <tr><td>Email</td><td>$2,885</td><td>66.8%</td><td>1.351</td><td>4.5</td></tr>
-              <tr><td>Meta</td><td>$7,692</td><td>49.0%</td><td>0.629</td><td>4.8</td></tr>
-              <tr><td>Influencer</td><td>$14,423</td><td>50.1%</td><td>0.619</td><td>6.1</td></tr>
-              <tr><td>LinkedIn</td><td>$34,615</td><td>56.8%</td><td>0.615</td><td>7.4</td></tr>
-              <tr><td>Paid Search</td><td>$15,385</td><td>62.1%</td><td>0.218</td><td>2.0</td></tr>
-              <tr><td>Hulu Streaming</td><td>$19,231</td><td>44.6%</td><td>0.194</td><td>2.2</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p><em>Saturation @ 2025</em> is how close a channel is to the ceiling of what it can contribute at its current spend level — a channel at 67% is getting two-thirds of everything it will ever give us, so further dollars there do less work. <em>Accounts per +$1k</em> is the marginal return on the next thousand dollars. <em>Accounts per +$15k</em> shows what a larger increase actually buys.</p>
-
-        <p><strong>The goal is to align marginal ROI across channels</strong> so that dollars sit where they generate the most collective return. The optimal marginal ROI comes out to 0.44 new accounts per $1,000. Reaching it means significantly boosting Email spend and growing Meta, Influencer, and LinkedIn at roughly similar rates, funded by pulling back on Paid Search and Hulu.</p>
-
-        <p>Email is the standout: it has by far the highest marginal return and by far the smallest budget. But it also saturates quickly, so the opportunity is bounded. That is why the recommendation doubles email spend and still only lands at $6,092 a week.</p>
-
-        <h2>How the Model Works</h2>
-        <p>Marketing Mix Models use fluctuations in marketing spend to attribute the impact of spend from different channels. If a period following a large influencer campaign sees a major uptick in new accounts, that is a positive signal. If accounts are unchanged after a major push on a channel, that is a negative signal. The variation in spend over time is what allows the model to estimate the sales impact of each channel.</p>
-        <p>The model was built using PyMC, a Python library for fitting Bayesian regression models. The core channel-level components are:</p>
-        <ul>
-          <li><strong>ROI</strong> — how much return we might expect from spend on each channel</li>
-          <li><strong>Adstock</strong> — the idea that marketing materials have a lasting effect, but with a decay over time</li>
-          <li><strong>Saturation</strong> — as spend on a channel increases, the relative return from each additional dollar diminishes</li>
-        </ul>
-        <p>On top of these, the model estimates a base level of new accounts that would occur without any marketing, as well as an underlying growth trend.</p>
-        <p>The Bayesian approach matters here because it pairs well-informed prior knowledge about channel performance with real-world data.</p>
-        <p>I began with broad priors and refined them through a combination of industry research, residual analysis, and saturation curve review. One notable challenge was that LinkedIn spend grew in parallel with overall business growth, which created a risk of the model over-attributing trend-driven growth to LinkedIn. I worked to address this through prior constraints, but before recommending we implement these changes, I would pursue further validation.</p>
-
-        <h2>Limitations and Next Steps</h2>
-        <ul>
-          <li><strong>Run geo-lift tests to externally validate channel-level ROI estimates.</strong> This would let us calibrate the model's estimates against a true experimental benchmark rather than relying on observational data alone.</li>
-          <li><strong>Sense-check model coefficients with the broader Data Science and Growth teams,</strong> incorporating domain expertise that isn't captured in the spend data.</li>
-        </ul>
-
-        <hr class="post-hr">
-
-        <h2>Appendix: Prior Specification</h2>
-        <p>The priors below reflect a combination of industry benchmarks, internal business knowledge, and iterative refinement based on model diagnostics.</p>
-
-        <h3>Baseline and Trend</h3>
-        <p>The intercept (base) is modeled as a Normal distribution centered at 100 new accounts per week with a standard deviation of 20, reflecting our expectation of a meaningful organic baseline with moderate uncertainty. The trend term captures gradual week-over-week growth and is centered at 0.10 with a tight standard deviation of 0.02 — encoding an expectation of slow, steady growth rather than rapid acceleration or decline. The trend prior was a key calibration point: an overly tight trend prior forces media coefficients to absorb underlying growth, which can inflate ROI estimates for channels whose spend happened to ramp up alongside the business.</p>
-        <pre><code>base  = pm.Normal("base",  mu=100, sigma=20)
-trend = pm.Normal("trend", mu=0.10, sigma=0.02)</code></pre>
-
-        <h3>Seasonality</h3>
-        <p>Weekly seasonality is captured using a single Fourier pair (sine and cosine terms). The cosine component is centered at 10, reflecting an expectation of moderate positive seasonal lift, while the sine component is centered at -4. Both carry a standard deviation of 6, allowing the data to pull meaningfully from the prior.</p>
-        <pre><code>sin_1 = pm.Normal("sin_1", mu=-4, sigma=6)
-cos_1 = pm.Normal("cos_1", mu=10, sigma=6)</code></pre>
-
-        <h3>Channel Coefficients</h3>
-        <p>Channel coefficients represent the maximum contribution a channel can make to new accounts, before saturation is applied. These are modeled as LogNormal distributions, which constrain coefficients to be positive (a marketing channel should not produce negative accounts) and allow for right-skewed uncertainty — we are more confident a channel is not far below our prior expectation than we are it cannot be substantially above it. Priors are differentiated by channel based on expected reach and historical performance patterns.</p>
-        <pre><code>coef_hulu  = pm.LogNormal("coef_hulu",  mu=np.log(20), sigma=0.4)
-coef_inf   = pm.LogNormal("coef_inf",   mu=np.log(30), sigma=0.4)
-coef_lin   = pm.LogNormal("coef_lin",   mu=np.log(30), sigma=0.25)
-coef_meta  = pm.LogNormal("coef_meta",  mu=np.log(15), sigma=0.4)
-coef_psrch = pm.LogNormal("coef_psrch", mu=np.log(20), sigma=0.4)
-coef_email = pm.LogNormal("coef_email", mu=np.log(15), sigma=0.4)</code></pre>
-        <p>LinkedIn carries a tighter sigma (0.25 vs. 0.40) due to the collinearity between LinkedIn spend and the business trend, discussed in the Limitations section. A tighter prior prevents the coefficient from absorbing trend-driven growth that the model cannot cleanly separate from LinkedIn's direct contribution.</p>
-
-        <h3>Adstock Decay</h3>
-        <p>Adstock decay parameters govern how quickly the effect of a channel's spend diminishes over time. These are modeled as Beta distributions, which are bounded between 0 and 1. A value near 1 implies a long carryover effect; a value near 0 implies the impact is nearly immediate with little persistence.</p>
-        <pre><code>decay_hulu  = pm.Beta("decay_hulu",  alpha=10, beta=2)   # mean ≈ 0.83, long carry
-decay_inf   = pm.Beta("decay_inf",   alpha=5,  beta=5)   # mean = 0.50, moderate
-decay_lin   = pm.Beta("decay_lin",   alpha=5,  beta=5)   # mean = 0.50, moderate
-decay_meta  = pm.Beta("decay_meta",  alpha=5,  beta=5)   # mean = 0.50, moderate
-decay_psrch = pm.Beta("decay_psrch", alpha=2,  beta=15)  # mean ≈ 0.12, fast decay
-decay_email = pm.Beta("decay_email", alpha=2,  beta=15)  # mean ≈ 0.12, fast decay</code></pre>
-        <p>Hulu is given a high decay prior (mean ≈ 0.83), consistent with the expectation that brand-level streaming advertising builds awareness gradually and has a longer carryover window. Paid Search and Email are given low decay priors (mean ≈ 0.12), reflecting their more transactional, immediate-response nature — a user who clicks a search ad or opens a marketing email either converts quickly or not at all.</p>
-
-        <h3>Saturation (Half-Saturation Points)</h3>
-        <p>The half-saturation parameter controls the spend level at which a channel reaches 50% of its maximum contribution — lower values mean a channel saturates more quickly. These are modeled as Gamma distributions, which enforce positivity and allow flexible shape.</p>
-        <pre><code>halfsat_hulu  = pm.Gamma("halfsat_hulu",  alpha=8, beta=6)    # mean ≈ 1.33
-halfsat_inf   = pm.Gamma("halfsat_inf",   alpha=8, beta=8)    # mean = 1.00
-halfsat_lin   = pm.Gamma("halfsat_lin",   alpha=8, beta=8)    # mean = 1.00
-halfsat_meta  = pm.Gamma("halfsat_meta",  alpha=8, beta=6)    # mean ≈ 1.33
-halfsat_psrch = pm.Gamma("halfsat_psrch", alpha=8, beta=12)   # mean ≈ 0.67
-halfsat_email = pm.Gamma("halfsat_email", alpha=8, beta=12)   # mean ≈ 0.67</code></pre>
-        <p>Paid Search and Email are given lower half-saturation priors (mean ≈ 0.67), reflecting the expectation that these channels reach diminishing returns at lower spend levels — a relatively finite audience of active searchers and existing email subscribers respectively. Hulu and Meta are given higher half-saturation priors (mean ≈ 1.33), consistent with the broader and more scalable audiences available through those platforms.</p>
-
-      </div>
-    </section>
-
-    <!-- ── Small Useful Things ────────────────── -->
-    <section class="section-panel" id="panel-tools">
-      <header class="section-header">
-        <button class="back-btn" data-section="landing">← Home</button>
-        <span class="section-eyebrow eyebrow-tools">TOOLS</span>
-        <h1 class="section-heading">Small Useful Things</h1>
-      </header>
-
-      <div class="section-grid">
-        <a class="section-tile tile-arrivals" href="#" data-section="arrivals">
-          <span class="tile-eyebrow">SF MUNI</span>
-          <h2 class="tile-title">Next 7 at Haight & Shrader</h2>
-          <p class="tile-teaser">Next three inbound and outbound arrivals at the Shrader–Stanyan stop with estimated minutes to arrival.</p>
-          <span class="tile-arrow">Open →</span>
-        </a>
-        <a class="section-tile tile-buses" href="#" data-section="buses">
-          <span class="tile-eyebrow">SF MUNI</span>
-          <h2 class="tile-title">SF Muni — Route 7</h2>
-          <p class="tile-teaser">Live bus positions on the 7-Haight/Noriega line, powered by the free 511 SF Bay API.</p>
-          <span class="tile-arrow">Open →</span>
-        </a>
-        <a class="section-tile tile-calculator" href="#" data-section="calculator">
-          <span class="tile-eyebrow">CALCULATOR</span>
-          <h2 class="tile-title">Net Worth Calculator</h2>
-          <p class="tile-teaser">Model your retirement savings trajectory across 401k and IRA accounts, with Roth vs. Traditional comparison and market simulation.</p>
-          <span class="tile-arrow">Open →</span>
-        </a>
-        <a class="section-tile tile-yoga" href="#" data-section="yoga">
-          <span class="tile-eyebrow">SF YOGA</span>
-          <h2 class="tile-title">Free Yoga Near the Haight</h2>
-          <p class="tile-teaser">Low-cost and free classes this week — studios, parks, museums, and public spaces within reach of the Haight.</p>
-          <span class="tile-arrow">Open →</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ── Net Worth Calculator ───────────────── -->
-    <section class="section-panel" id="panel-calculator">
-      <header class="section-header">
-        <button class="back-btn" data-section="tools">← Small Useful Things</button>
-        <span class="section-eyebrow eyebrow-tools">TOOLS</span>
-        <h1 class="section-heading">Net Worth Calculator</h1>
-      </header>
-
-      <div class="account-row">
-
-        <div class="input-tile tile-blue">
-          <div class="tile-header"><span>401k</span><span class="tile-collapse-icon">▾</span></div>
-          <div class="tile-body">
-
-            <div class="type-pill-wrap">
-              <div class="type-pill-label">Account Type</div>
-              <div class="type-pill" data-account="k401">
-                <div class="type-opt active" data-type="roth">Roth</div>
-                <div class="type-opt" data-type="traditional">Traditional</div>
-              </div>
-            </div>
-
-            <hr class="field-hr">
-
-            <div class="field">
-              <label>Your Contribution (% of salary)</label>
-              <div class="input-row">
-                <input type="number" id="self-pct" value="12" min="0" max="100" step="0.5">
-                <span class="dollar-equiv" id="self-dollar">$12,000/yr</span>
-              </div>
-              <span class="cap-warning" id="k401-cap-warning">Exceeds 2026 limit of $23,500/yr — capped</span>
-            </div>
-
-            <div class="field">
-              <label>Employer Match (% of salary)</label>
-              <div class="input-row">
-                <input type="number" id="employer-pct" value="3" min="0" max="100" step="0.5">
-                <span class="dollar-equiv" id="employer-dollar">$3,000/yr</span>
-              </div>
-            </div>
-
-            <hr class="field-hr">
-
-            <div class="balance-section">
-              <div class="field">
-                <label>Current Roth Balance ($)</label>
-                <input type="number" id="k401-roth-balance" value="25000" min="0" step="1000">
-              </div>
-              <div class="field">
-                <label>Current Trad Balance ($)</label>
-                <input type="number" id="k401-trad-balance" value="0" min="0" step="1000">
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="input-tile tile-plum">
-          <div class="tile-header"><span>IRA</span><span class="tile-collapse-icon">▾</span></div>
-          <div class="tile-body">
-
-            <div class="type-pill-wrap">
-              <div class="type-pill-label">Account Type</div>
-              <div class="type-pill" data-account="ira">
-                <div class="type-opt active" data-type="roth">Roth</div>
-                <div class="type-opt" data-type="traditional">Traditional</div>
-              </div>
-            </div>
-
-            <hr class="field-hr">
-
-            <div class="field">
-              <label>Annual Contribution ($)</label>
-              <input type="number" id="ira-contrib" value="7000" min="0" step="500">
-              <span class="cap-warning" id="ira-cap-warning">Exceeds 2026 limit of $7,000/yr — capped</span>
-            </div>
-
-            <hr class="field-hr">
-
-            <div class="balance-section">
-              <div class="field">
-                <label>Current Roth Balance ($)</label>
-                <input type="number" id="ira-roth-balance" value="5000" min="0" step="1000">
-              </div>
-              <div class="field">
-                <label>Current Trad Balance ($)</label>
-                <input type="number" id="ira-trad-balance" value="0" min="0" step="1000">
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div><!-- /account-row -->
-
-      <div class="view-toggle-row">
-        <span class="view-label">Projection</span>
-        <div class="pill-toggle">
-          <div class="pill-option active" data-mode="steady">Steady growth</div>
-          <div class="pill-option" data-mode="simulate">Market simulation</div>
-        </div>
-        <div class="info-wrap">
-          <button class="info-btn">i</button>
-          <div class="info-tooltip">
-            <strong>Market Simulation Model</strong>
-            Simulates monthly portfolio movements using Geometric Brownian Motion (GBM) —
-            the industry-standard model for asset prices.<br><br>
-            Each month the portfolio changes by:<br>
-            <em>exp((μ − σ²/2)·dt + σ·√dt·Z)</em><br><br>
-            where μ is your return rate, σ = 16% (historical S&amp;P 500 volatility), dt = 1/12,
-            and Z is a random standard normal draw. Expected long-run outcome matches steady growth,
-            but paths swing — as in real markets.
-          </div>
-        </div>
-        <button class="rerun-btn" id="rerun-btn">↺ Re-run</button>
-      </div>
-
-      <div class="results">
-        <div class="result-card portfolio-card">
-          <div class="rc-label">Portfolio Value</div>
-          <div class="rc-value" id="res-portfolio">—</div>
-          <div class="rc-sub" id="res-portfolio-sub">After-tax at retirement</div>
-          <div class="rc-breakdown" id="res-portfolio-breakdown"></div>
-        </div>
-        <div class="result-card contrib-card">
-          <div class="rc-label">Total Contributed</div>
-          <div class="rc-value" id="res-contributed">—</div>
-          <div class="rc-sub">You + employer (all accounts)</div>
-          <div class="rc-breakdown" id="res-contrib-breakdown"></div>
-        </div>
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="growthChart"></canvas>
-      </div>
-
-      <div class="input-tile tile-amber profile-row" style="margin-top: 14px">
-        <div class="tile-header"><span>Your Profile</span><span class="tile-collapse-icon">▾</span></div>
-        <div class="tile-body-grid">
-          <div class="field">
-            <label>Annual Salary ($)</label>
-            <input type="number" id="salary" value="100000" min="0" step="1000">
-          </div>
-          <div class="field">
-            <label>Years to Retirement</label>
-            <input type="number" id="years" value="35" min="1" max="50" step="1">
-          </div>
-          <div class="field">
-            <label>Expected Return (%/yr)</label>
-            <input type="number" id="growth-rate" value="7" min="0" max="30" step="0.5">
-          </div>
-          <div class="field">
-            <label>Salary Growth (%/yr)</label>
-            <input type="number" id="salary-growth" value="3" min="0" max="20" step="0.5">
-          </div>
-          <div class="field">
-            <label>Current Tax Rate (%)</label>
-            <input type="number" id="tax-now" value="24" min="0" max="60" step="1">
-          </div>
-          <div class="field">
-            <label>Retirement Tax Rate (%)</label>
-            <input type="number" id="tax-retirement" value="20" min="0" max="60" step="1">
-          </div>
-        </div>
-      </div>
-
-      <p class="compare-note">
-        Both Roth and Traditional accounts grow identically — the difference is when you pay tax.
-        Roth: contribute after-tax dollars, withdraw tax-free.
-        Traditional: defer taxes now, pay at your retirement bracket.
-        Choose whichever rate you expect to be lower.<br>
-        2026 IRS limits: 401k employee $23,500/yr · 401k total (employee + employer) $70,000/yr · IRA $7,000/yr.
-        Employer match is capped so combined contributions stay within the $70,000 415 limit.
-        Limits are projected to grow ~2.5%/yr (inflation-adjusted in $500 steps, matching historical IRS adjustments).
-        Roth IRA income phaseout begins at $150k (single) / $236k (MFJ).
-        Traditional IRA deductibility limits may apply.
-      </p>
-
-    </section><!-- /panel-calculator -->
-
-    <!-- ── SF Muni Route 7 ─────────────────────── -->
-    <section class="section-panel" id="panel-buses">
-      <header class="section-header">
-        <button class="back-btn" data-section="tools">← Small Useful Things</button>
-        <span class="section-eyebrow eyebrow-tools">TOOLS</span>
-        <h1 class="section-heading">SF Muni — Route 7</h1>
-      </header>
-
-      <div id="bus-setup" class="bus-setup">
-        <p>Live bus locations are powered by the free 511 SF Bay API.</p>
-        <p>Get a free key at <a href="https://511.org/open-data/token" target="_blank">511.org/open-data/token</a>, then paste it below.</p>
-        <div class="bus-setup-row">
-          <input type="text" id="bus-api-key-input" placeholder="Paste your 511 API key…" autocomplete="off">
-          <button id="bus-api-key-save" class="bus-btn">Show buses</button>
-        </div>
-      </div>
-
-      <div id="bus-tracker" class="bus-tracker" style="display:none">
-        <div class="bus-toolbar">
-          <span id="bus-status" class="bus-status"></span>
-          <button id="bus-refresh" class="bus-btn">↺ Refresh</button>
-          <button id="bus-clear-key" class="bus-btn bus-btn-ghost">Change API key</button>
-        </div>
-        <div id="bus-map"></div>
-      </div>
-
-    </section><!-- /panel-buses -->
-
-    <!-- ── Free Yoga Near the Haight ───────────── -->
-    <section class="section-panel" id="panel-yoga">
-      <header class="section-header">
-        <button class="back-btn" data-section="tools">← Small Useful Things</button>
-        <span class="section-eyebrow eyebrow-tools">SF YOGA</span>
-        <h1 class="section-heading">Free Yoga Near the Haight</h1>
-      </header>
-
-      <p class="yoga-meta">Curated from studios, parks, museums, and public spaces within walking distance of the Haight &middot; Updated <span id="yoga-updated"></span></p>
-
-      <div class="yoga-filters">
-        <div class="yoga-filter-row">
-          <span class="yoga-filter-label">Day</span>
-          <div class="yoga-filter-group" id="yoga-day-filter">
-            <!-- built dynamically by yoga.js -->
-          </div>
-        </div>
-        <div class="yoga-filter-row">
-          <span class="yoga-filter-label">Cost</span>
-          <div class="yoga-filter-group" id="yoga-cost-filter">
-            <button class="yoga-filter-btn active" data-cost="all">All</button>
-            <button class="yoga-filter-btn" data-cost="free">Free</button>
-            <button class="yoga-filter-btn" data-cost="donation">Donation</button>
-            <button class="yoga-filter-btn" data-cost="low">Low cost</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="yoga-grid" class="yoga-grid">
-        <!-- rendered by yoga.js -->
-      </div>
-
-      <p class="yoga-disclaimer">
-        Schedules are manually curated and may change. Always verify times and dates directly with the venue before going.
-        Free outdoor classes are weather-dependent — check <a href="https://sfrecpark.org/programs-and-events/" target="_blank" rel="noopener">sfrecpark.org</a> for cancellations.
-        The de Young yoga series runs seasonally; confirm current dates at <a href="https://deyoung.famsf.org/programs" target="_blank" rel="noopener">deyoung.famsf.org</a>.
-        SFPL wellness events vary by branch — browse <a href="https://sfpl.org/events" target="_blank" rel="noopener">sfpl.org/events</a>.
-      </p>
-    </section><!-- /panel-yoga -->
-
-    <!-- ── Next 7 at Haight & Shrader ─────────── -->
-    <section class="section-panel" id="panel-arrivals">
-      <header class="section-header">
-        <button class="back-btn" data-section="tools">← Small Useful Things</button>
-        <span class="section-eyebrow eyebrow-tools">TOOLS</span>
-        <h1 class="section-heading">Next 7 at Haight & Shrader</h1>
-      </header>
-
-      <div id="arr-setup" class="bus-setup">
-        <p>Uses the same free 511 SF Bay API key as the bus tracker.</p>
-        <p>Get a key at <a href="https://511.org/open-data/token" target="_blank">511.org/open-data/token</a>, then paste it below.</p>
-        <div class="bus-setup-row">
-          <input type="text" id="arr-key-input" placeholder="Paste your 511 API key…" autocomplete="off">
-          <button id="arr-key-save" class="bus-btn">Check arrivals</button>
-        </div>
-      </div>
-
-      <div id="arr-board" style="display:none">
-        <div class="arr-toolbar">
-          <span id="arr-status" class="arr-status"></span>
-          <button id="arr-refresh" class="bus-btn">↺ Refresh</button>
-          <button id="arr-clear-key" class="bus-btn bus-btn-ghost">Change key</button>
-        </div>
-        <div class="arr-columns">
-          <div class="arr-col arr-col-ib">
-            <div class="arr-col-header">
-              <span class="arr-direction">Inbound</span>
-              <span class="arr-direction-sub">toward downtown</span>
-            </div>
-            <div id="arr-ib"></div>
-          </div>
-          <div class="arr-col arr-col-ob">
-            <div class="arr-col-header">
-              <span class="arr-direction">Outbound</span>
-              <span class="arr-direction-sub">toward Ocean Beach</span>
-            </div>
-            <div id="arr-ob"></div>
-          </div>
-        </div>
-      </div>
-
-    </section><!-- /panel-arrivals -->
-
-  </main>
-
-  <footer class="landing-footer">
-    <a class="social-icon-btn" href="https://www.linkedin.com/in/conyerswilliam/" target="_blank" rel="noopener" aria-label="LinkedIn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
-    </a>
-    <a class="social-icon-btn" href="https://github.com/WilliamConyers" target="_blank" rel="noopener" aria-label="GitHub">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-      </svg>
-    </a>
-  </footer>
-
-  <script src="js/tabs.js"></script>
-  <script src="js/calculator/math.js"></script>
-  <script src="js/calculator/chart.js"></script>
-  <script src="js/calculator/calculator.js"></script>
-  <script src="js/bus/bus.js"></script>
-  <script src="js/arrivals/arrivals.js"></script>
-  <script src="js/yoga/yoga.js"></script>
-
-</body>
-</html>
+---
+layout: default
+title: William Conyers
+description: >-
+  A personal site for fantasy fiction essays, data science projects,
+  and small useful tools — built by William Conyers.
+---
+<div class="landing-hero">
+  <h1 class="hero-name">William Conyers</h1>
+  <p class="hero-statement">This website is a creative space. Some days I'm here to build with AI and some days to exile technology and prove to myself I can still think big original thoughts.</p>
+</div>
+
+<div class="section-tiles">
+  <a class="section-tile tile-fantasy" href="/fantasy/">
+    <span class="tile-eyebrow">FANTASY</span>
+    <h2 class="tile-title">Thinking about Fantasy Stories</h2>
+    <p class="tile-teaser">Spending time with stories I love and working through what they mean to me</p>
+    <span class="tile-arrow">Explore →</span>
+    <svg class="hiker-doodle" viewBox="0 0 140 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Trail hiker: left leg forward, slightly smaller, receding depth -->
+      <g class="hiker-trail">
+        <rect x="57" y="24" width="6" height="9" rx="2"
+              fill="rgba(247,240,222,0.08)" stroke="rgba(247,240,222,0.28)" stroke-width="1.1"/>
+        <circle cx="63" cy="18" r="4.3"
+                fill="none" stroke="rgba(247,240,222,0.55)" stroke-width="1.4"/>
+        <line x1="63"  y1="22.3" x2="61.5" y2="34"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="61.5" y1="34"  x2="67"   y2="46"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="61.5" y1="34"  x2="56"   y2="46"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="62"  y1="27"   x2="57.5" y2="32.5" stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
+        <line x1="62"  y1="27"   x2="66.5" y2="33"   stroke="rgba(247,240,222,0.55)" stroke-width="1.4" stroke-linecap="round"/>
+      </g>
+      <!-- Lead hiker: right leg forward, bolder, trekking pole -->
+      <g class="hiker-lead">
+        <rect x="98" y="22" width="8" height="11" rx="2.5"
+              fill="rgba(247,240,222,0.1)" stroke="rgba(247,240,222,0.42)" stroke-width="1.2"/>
+        <circle cx="106" cy="15" r="5.2"
+                fill="none" stroke="rgba(247,240,222,0.8)" stroke-width="1.6"/>
+        <line x1="106" y1="20.2" x2="104" y2="33"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="104" y1="33"   x2="111" y2="46"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="104" y1="33"   x2="98"  y2="46"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="105" y1="25"   x2="99"  y2="32"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="105" y1="25"   x2="110" y2="30"   stroke="rgba(247,240,222,0.8)" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="110" y1="30"   x2="113" y2="46"   stroke="rgba(247,240,222,0.48)" stroke-width="1.1" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </a>
+  <a class="section-tile tile-data" href="/data-science/">
+    <span class="tile-eyebrow">DATA SCIENCE</span>
+    <h2 class="tile-title">Data Science Projects</h2>
+    <p class="tile-teaser">Building technical skills and preparing for professional pursuits</p>
+    <span class="tile-arrow">Explore →</span>
+    <svg class="chart-doodle" viewBox="0 0 90 52" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="4" y1="47" x2="86" y2="47" stroke="rgba(247,240,222,0.18)" stroke-width="0.8"/>
+      <polyline class="chart-line"
+        points="4,43 20,35 33,39 50,20 64,25 86,5"
+        fill="none" stroke="rgba(247,240,222,0.65)" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="chart-dot" cx="4"  cy="43" r="1.8" fill="rgba(247,240,222,0.75)"/>
+      <circle class="chart-dot" cx="20" cy="35" r="1.8" fill="rgba(247,240,222,0.75)"/>
+      <circle class="chart-dot" cx="33" cy="39" r="1.8" fill="rgba(247,240,222,0.75)"/>
+      <circle class="chart-dot" cx="50" cy="20" r="1.8" fill="rgba(247,240,222,0.75)"/>
+      <circle class="chart-dot" cx="64" cy="25" r="1.8" fill="rgba(247,240,222,0.75)"/>
+      <circle class="chart-dot" cx="86" cy="5"  r="1.8" fill="rgba(247,240,222,0.75)"/>
+    </svg>
+  </a>
+  <a class="section-tile tile-tools" href="/tools/">
+    <span class="tile-eyebrow">TOOLS</span>
+    <h2 class="tile-title">Small Useful Things</h2>
+    <p class="tile-teaser">Simple products that make my life just a little smoother</p>
+    <span class="tile-arrow">Explore →</span>
+  </a>
+</div>

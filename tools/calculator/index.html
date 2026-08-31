@@ -1,0 +1,189 @@
+---
+layout: default
+title: Net Worth Calculator
+description: Model your retirement savings trajectory across 401k and IRA accounts, with Roth vs. Traditional comparison and market simulation.
+nav_section: tools
+extra_css:
+  - /css/calculator.css
+extra_js_cdn:
+  - https://cdn.jsdelivr.net/npm/chart.js
+extra_js:
+  - /js/calculator/math.js
+  - /js/calculator/chart.js
+  - /js/calculator/calculator.js
+---
+<header class="section-header">
+  <a class="back-btn" href="/tools/">← Small Useful Things</a>
+  <span class="section-eyebrow eyebrow-tools">TOOLS</span>
+  <h1 class="section-heading">Net Worth Calculator</h1>
+</header>
+
+<div class="account-row">
+
+  <div class="input-tile tile-blue">
+    <div class="tile-header"><span>401k</span><span class="tile-collapse-icon">▾</span></div>
+    <div class="tile-body">
+
+      <div class="type-pill-wrap">
+        <div class="type-pill-label">Account Type</div>
+        <div class="type-pill" data-account="k401">
+          <div class="type-opt active" data-type="roth">Roth</div>
+          <div class="type-opt" data-type="traditional">Traditional</div>
+        </div>
+      </div>
+
+      <hr class="field-hr">
+
+      <div class="field">
+        <label>Your Contribution (% of salary)</label>
+        <div class="input-row">
+          <input type="number" id="self-pct" value="12" min="0" max="100" step="0.5">
+          <span class="dollar-equiv" id="self-dollar">$12,000/yr</span>
+        </div>
+        <span class="cap-warning" id="k401-cap-warning">Exceeds 2026 limit of $23,500/yr — capped</span>
+      </div>
+
+      <div class="field">
+        <label>Employer Match (% of salary)</label>
+        <div class="input-row">
+          <input type="number" id="employer-pct" value="3" min="0" max="100" step="0.5">
+          <span class="dollar-equiv" id="employer-dollar">$3,000/yr</span>
+        </div>
+      </div>
+
+      <hr class="field-hr">
+
+      <div class="balance-section">
+        <div class="field">
+          <label>Current Roth Balance ($)</label>
+          <input type="number" id="k401-roth-balance" value="25000" min="0" step="1000">
+        </div>
+        <div class="field">
+          <label>Current Trad Balance ($)</label>
+          <input type="number" id="k401-trad-balance" value="0" min="0" step="1000">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="input-tile tile-plum">
+    <div class="tile-header"><span>IRA</span><span class="tile-collapse-icon">▾</span></div>
+    <div class="tile-body">
+
+      <div class="type-pill-wrap">
+        <div class="type-pill-label">Account Type</div>
+        <div class="type-pill" data-account="ira">
+          <div class="type-opt active" data-type="roth">Roth</div>
+          <div class="type-opt" data-type="traditional">Traditional</div>
+        </div>
+      </div>
+
+      <hr class="field-hr">
+
+      <div class="field">
+        <label>Annual Contribution ($)</label>
+        <input type="number" id="ira-contrib" value="7000" min="0" step="500">
+        <span class="cap-warning" id="ira-cap-warning">Exceeds 2026 limit of $7,000/yr — capped</span>
+      </div>
+
+      <hr class="field-hr">
+
+      <div class="balance-section">
+        <div class="field">
+          <label>Current Roth Balance ($)</label>
+          <input type="number" id="ira-roth-balance" value="5000" min="0" step="1000">
+        </div>
+        <div class="field">
+          <label>Current Trad Balance ($)</label>
+          <input type="number" id="ira-trad-balance" value="0" min="0" step="1000">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /account-row -->
+
+<div class="view-toggle-row">
+  <span class="view-label">Projection</span>
+  <div class="pill-toggle">
+    <div class="pill-option active" data-mode="steady">Steady growth</div>
+    <div class="pill-option" data-mode="simulate">Market simulation</div>
+  </div>
+  <div class="info-wrap">
+    <button class="info-btn">i</button>
+    <div class="info-tooltip">
+      <strong>Market Simulation Model</strong>
+      Simulates monthly portfolio movements using Geometric Brownian Motion (GBM) —
+      the industry-standard model for asset prices.<br><br>
+      Each month the portfolio changes by:<br>
+      <em>exp((μ − σ²/2)·dt + σ·√dt·Z)</em><br><br>
+      where μ is your return rate, σ = 16% (historical S&amp;P 500 volatility), dt = 1/12,
+      and Z is a random standard normal draw. Expected long-run outcome matches steady growth,
+      but paths swing — as in real markets.
+    </div>
+  </div>
+  <button class="rerun-btn" id="rerun-btn">↺ Re-run</button>
+</div>
+
+<div class="results">
+  <div class="result-card portfolio-card">
+    <div class="rc-label">Portfolio Value</div>
+    <div class="rc-value" id="res-portfolio">—</div>
+    <div class="rc-sub" id="res-portfolio-sub">After-tax at retirement</div>
+    <div class="rc-breakdown" id="res-portfolio-breakdown"></div>
+  </div>
+  <div class="result-card contrib-card">
+    <div class="rc-label">Total Contributed</div>
+    <div class="rc-value" id="res-contributed">—</div>
+    <div class="rc-sub">You + employer (all accounts)</div>
+    <div class="rc-breakdown" id="res-contrib-breakdown"></div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <canvas id="growthChart"></canvas>
+</div>
+
+<div class="input-tile tile-amber profile-row" style="margin-top: 14px">
+  <div class="tile-header"><span>Your Profile</span><span class="tile-collapse-icon">▾</span></div>
+  <div class="tile-body-grid">
+    <div class="field">
+      <label>Annual Salary ($)</label>
+      <input type="number" id="salary" value="100000" min="0" step="1000">
+    </div>
+    <div class="field">
+      <label>Years to Retirement</label>
+      <input type="number" id="years" value="35" min="1" max="50" step="1">
+    </div>
+    <div class="field">
+      <label>Expected Return (%/yr)</label>
+      <input type="number" id="growth-rate" value="7" min="0" max="30" step="0.5">
+    </div>
+    <div class="field">
+      <label>Salary Growth (%/yr)</label>
+      <input type="number" id="salary-growth" value="3" min="0" max="20" step="0.5">
+    </div>
+    <div class="field">
+      <label>Current Tax Rate (%)</label>
+      <input type="number" id="tax-now" value="24" min="0" max="60" step="1">
+    </div>
+    <div class="field">
+      <label>Retirement Tax Rate (%)</label>
+      <input type="number" id="tax-retirement" value="20" min="0" max="60" step="1">
+    </div>
+  </div>
+</div>
+
+<p class="compare-note">
+  Both Roth and Traditional accounts grow identically — the difference is when you pay tax.
+  Roth: contribute after-tax dollars, withdraw tax-free.
+  Traditional: defer taxes now, pay at your retirement bracket.
+  Choose whichever rate you expect to be lower.<br>
+  2026 IRS limits: 401k employee $23,500/yr · 401k total (employee + employer) $70,000/yr · IRA $7,000/yr.
+  Employer match is capped so combined contributions stay within the $70,000 415 limit.
+  Limits are projected to grow ~2.5%/yr (inflation-adjusted in $500 steps, matching historical IRS adjustments).
+  Roth IRA income phaseout begins at $150k (single) / $236k (MFJ).
+  Traditional IRA deductibility limits may apply.
+</p>

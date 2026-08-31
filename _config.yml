@@ -1,0 +1,32 @@
+title: William Conyers
+description: >-
+  A personal site for fantasy fiction essays, data science projects,
+  and small useful tools — built by William Conyers.
+url: "https://williamconyers.com"
+baseurl: ""
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+collections:
+  articles:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+      type: articles
+    values:
+      layout: post
+
+exclude:
+  - style-guide.md
+  - README.md
+  - Gemfile
+  - Gemfile.lock
