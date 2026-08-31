@@ -22,24 +22,3 @@
   reward: Bonus cash back after you're approved and meet the spending requirement
   link: https://i.capitalone.com/JcOsiK5rz
   placeholder: false
-
-- name: "[Placeholder] Streaming Service"
-  category: STREAMING
-  description: "Swap this out for a real referral program — e.g. a streaming service, food delivery app, or ride share."
-  reward: "$X credit for you, $X for me"
-  link: "#"
-  placeholder: true
-
-- name: "[Placeholder] Banking / Investing App"
-  category: FINANCE
-  description: "Swap this out for a real referral program — e.g. a bank, brokerage, or budgeting app."
-  reward: "Free stock, cash bonus, or fee waiver — whatever the program offers"
-  link: "#"
-  placeholder: true
-
-- name: "[Placeholder] Shopping or Delivery"
-  category: SHOPPING
-  description: "Swap this out for a real referral program — e.g. a grocery delivery, meal kit, or retail membership."
-  reward: "Discount or credit on your first order"
-  link: "#"
-  placeholder: true
