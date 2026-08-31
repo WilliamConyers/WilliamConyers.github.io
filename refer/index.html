@@ -1,0 +1,31 @@
+---
+layout: default
+title: Refer & Earn
+description: Referral codes and deals for services I actually use — sign up through my link and we both get something out of it.
+nav_section: refer
+extra_css:
+  - /css/refer.css
+---
+<header class="section-header">
+  <a class="back-btn" href="/">← Home</a>
+  <span class="section-eyebrow eyebrow-refer">REFER &amp; EARN</span>
+  <h1 class="section-heading">Referral Codes & Deals</h1>
+</header>
+
+<p class="refer-intro">Codes and links for services I actually use. Sign up through one of these and, depending on the program, you get a bonus and I get a bonus — no cost to you beyond what you'd already pay.</p>
+<p class="refer-disclosure">Disclosure: these are referral/affiliate links. If you sign up through one, I may receive a reward from the company. I only list programs for things I'd recommend anyway.</p>
+
+<div class="referral-grid">
+  {% for item in site.data.referrals %}
+  <div class="referral-card{% if item.placeholder %} is-placeholder{% endif %}">
+    {% if item.placeholder %}<span class="referral-placeholder-flag">Placeholder</span>{% endif %}
+    <span class="referral-eyebrow">{{ item.category }}</span>
+    <h2 class="referral-title">{{ item.name }}</h2>
+    <p class="referral-desc">{{ item.description }}</p>
+    <div class="referral-reward"><strong>Reward:</strong> {{ item.reward }}</div>
+    <a class="referral-cta" href="{{ item.link }}" target="_blank" rel="noopener sponsored">
+      {% if item.placeholder %}Not live yet{% else %}Use this link →{% endif %}
+    </a>
+  </div>
+  {% endfor %}
+</div>

@@ -20,6 +20,7 @@
   --color-section-fantasy: #B85A3F;
   --color-section-data:    #C4983F;
   --color-section-tools:   #46606A;
+  --color-section-refer:   #5A7A82;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

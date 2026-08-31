@@ -1,0 +1,113 @@
+/* ─────────────────────────────────────────────
+   refer.css
+   Refer & Earn — referral code cards.
+───────────────────────────────────────────── */
+
+.refer-intro {
+  max-width: 640px;
+  font-family: Charter, "Iowan Old Style", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--color-ink-muted);
+  margin-bottom: 12px;
+}
+
+.refer-disclosure {
+  max-width: 640px;
+  font-size: 12px;
+  color: var(--color-ink-faint);
+  margin-bottom: 40px;
+}
+
+.referral-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding-bottom: 64px;
+}
+
+.referral-card {
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-border);
+  border-radius: 10px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.referral-card.is-placeholder {
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.referral-placeholder-flag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  background: var(--color-cream-tint);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.referral-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-section-refer);
+}
+
+.referral-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-ink);
+  letter-spacing: -0.2px;
+}
+
+.referral-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.referral-reward {
+  font-size: 12.5px;
+  color: var(--color-ink-subtle);
+  padding: 10px 12px;
+  background: var(--color-cream-tint);
+  border-radius: 6px;
+}
+.referral-reward strong { color: var(--color-ink); font-weight: 500; }
+
+.referral-cta {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-cream);
+  background: var(--color-section-refer);
+  padding: 9px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.referral-cta:hover { opacity: 0.85; text-decoration: none; }
+
+.referral-card.is-placeholder .referral-cta {
+  background: var(--color-ink-faint);
+  pointer-events: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .referral-grid { grid-template-columns: 1fr; }
+}

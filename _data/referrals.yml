@@ -1,0 +1,45 @@
+# Referral codes shown on /refer/
+#
+# Each entry:
+#   name        - service/product name
+#   category    - short label shown as the card eyebrow (e.g. "FINANCE")
+#   description - one or two sentences on what it is
+#   reward      - what the reader gets for using it (be specific)
+#   link        - the URL the "Use this" button opens
+#   placeholder - true hides nothing but adds a visible "placeholder" flag
+#                 on the card so it's obvious which entries are real
+#
+# Click tracking: link a service like Dub.co or Bitly (both have free
+# tiers) to your own domain, create a short link there for each real
+# referral URL, and paste that short link into `link` below instead of
+# the raw URL. Their dashboard will then show clicks per code. Until
+# you've done that, `link` should just be the raw referral URL — it
+# still works, you just won't see click counts.
+
+- name: Capital One Savor Card
+  category: FINANCE
+  description: A cash-back credit card with rotating bonus categories on dining and entertainment.
+  reward: Bonus cash back after you're approved and meet the spending requirement
+  link: https://i.capitalone.com/JcOsiK5rz
+  placeholder: false
+
+- name: "[Placeholder] Streaming Service"
+  category: STREAMING
+  description: "Swap this out for a real referral program — e.g. a streaming service, food delivery app, or ride share."
+  reward: "$X credit for you, $X for me"
+  link: "#"
+  placeholder: true
+
+- name: "[Placeholder] Banking / Investing App"
+  category: FINANCE
+  description: "Swap this out for a real referral program — e.g. a bank, brokerage, or budgeting app."
+  reward: "Free stock, cash bonus, or fee waiver — whatever the program offers"
+  link: "#"
+  placeholder: true
+
+- name: "[Placeholder] Shopping or Delivery"
+  category: SHOPPING
+  description: "Swap this out for a real referral program — e.g. a grocery delivery, meal kit, or retail membership."
+  reward: "Discount or credit on your first order"
+  link: "#"
+  placeholder: true

@@ -52,6 +52,7 @@
 .nav-link[href="/fantasy/"].active      { color: var(--color-section-fantasy); }
 .nav-link[href="/data-science/"].active { color: var(--color-section-data); }
 .nav-link[href="/tools/"].active        { color: var(--color-section-tools); }
+.nav-link[href="/refer/"].active        { color: var(--color-section-refer); }
 
 /* ── Main container ── */
 .site-main {
@@ -93,6 +94,7 @@
 .eyebrow-fantasy { color: var(--color-section-fantasy); }
 .eyebrow-data    { color: var(--color-section-data); }
 .eyebrow-tools   { color: var(--color-section-tools); }
+.eyebrow-refer   { color: var(--color-section-refer); }
 
 .section-heading {
   font-size: 28px;
