@@ -13,6 +13,7 @@ extra_css:
 </header>
 
 <p class="refer-intro">Referral codes for things I use. Hopefully useful to people who want referral codes, and nice for me to make some money.</p>
+<p class="refer-disclosure">These are referral links — if you use one, I may receive a reward from the company.</p>
 
 <div class="referral-grid">
   {% for item in site.data.referrals %}
@@ -21,6 +22,12 @@ extra_css:
     <span class="referral-eyebrow">{{ item.category }}</span>
     <h2 class="referral-title">{{ item.name }}</h2>
     <p class="referral-desc">{{ item.description }}</p>
+    {% if item.long_description %}
+    <details class="referral-more">
+      <summary>Read more</summary>
+      <p>{{ item.long_description }}</p>
+    </details>
+    {% endif %}
     <div class="referral-reward"><strong>Reward:</strong> {{ item.reward }}</div>
     <a class="referral-cta" href="{{ item.link }}" target="_blank" rel="noopener sponsored">
       {% if item.placeholder %}Not live yet{% else %}Use this link →{% endif %}
