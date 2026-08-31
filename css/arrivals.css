@@ -3,6 +3,59 @@
    Next 7 arrivals board at Haight & Shrader.
 ───────────────────────────────────────────── */
 
+/* ── API key setup screen ── */
+.arr-setup { max-width: 520px; }
+.arr-setup p { margin-bottom: 10px; }
+
+.arr-setup-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+.arr-setup-row input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-ink);
+  background: var(--color-cream);
+  border: 0.5px solid var(--color-border);
+  border-radius: 6px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.arr-setup-row input:focus {
+  border-color: var(--color-slate);
+  border-width: 1px;
+}
+
+/* ── Buttons ── */
+.arr-btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--color-slate);
+  color: var(--color-cream);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.arr-btn:hover { opacity: 0.85; }
+
+.arr-btn-ghost {
+  background: transparent;
+  color: var(--color-ink-subtle);
+  border: 0.5px solid var(--color-border);
+}
+.arr-btn-ghost:hover {
+  background: var(--color-cream-tint);
+  color: var(--color-ink);
+}
+
 .arr-toolbar {
   display: flex;
   align-items: center;
